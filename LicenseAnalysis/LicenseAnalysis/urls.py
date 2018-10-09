@@ -22,5 +22,6 @@ urlpatterns = [
     path('license/introduction', include('Introduction.urls')),
     path('license/customization', include('Customization.urls')),
     path('license/compliance', include('Compliance.urls')),
+    path('license/conflict', include('Conflict.urls')),
     path('admin/', admin.site.urls),
 ]
