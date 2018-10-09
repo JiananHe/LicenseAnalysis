@@ -20,5 +20,6 @@ from . import views
 urlpatterns = [
     path('license/', views.index),
     path('license/introduction', include('Introduction.urls')),
+    path('license/customization', include('Customization.urls')),
     path('admin/', admin.site.urls),
 ]
