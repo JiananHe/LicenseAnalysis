@@ -9,7 +9,7 @@ Analysis the compliance and conflicts of various open-source licenses.
 python manage.py runserver <IP>:<PORT>
 ```
 If no error occurs, then you have started your web server successfully.<br>
-* Open your brower, input the url:
+* Open your browser, input the url:
 ```
 <IP>:<PORT>/license
 ```
