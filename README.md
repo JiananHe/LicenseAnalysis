@@ -13,3 +13,5 @@ If no error occurs, then you have started your web server successfully.<br>
 ```
 <IP>:<PORT>/license
 ```
+
+Test SSH
