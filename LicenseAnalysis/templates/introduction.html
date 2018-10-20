@@ -22,103 +22,84 @@
 </nav>
 
 <div class="container" style="padding-top: 50px">
-    <h2 class="text-primary"><strong>Licenses Introduction</strong></h2>
-    <p>Open source licenses grant permission to everyone to use, modify, and share licensed software for
+    <div style="margin: 0px 40px" class="col">
+        <div class="row-md-6 row">
+            <div class="col-md-6">
+                <h2 class="text-primary"><strong>Licenses Introduction</strong></h2>
+            </div>
+            <div class="col-md-6" style="margin-top: 20px" >
+                <form action="" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="input-group">
+                    <input type="text" class="form-control" id="search-text" name="search-text">
+                    <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">Search</button>
+                    </span>
+                    </div><!-- /input-group -->
+                </form>
+            </div>
+        </div>
+        <div class="row-md-6">
+            <p>Open source licenses grant permission to everyone to use, modify, and share licensed software for
         any purpose, subject to conditions preserving the provenance and openness of the software.
         The following licenses are arranged from one with the strongest of these conditions (GNU AGPLv3)
         to one with no conditions (Unlicense). Notice that the popular licenses featured on the home page
         (GNU GPLv3 and MIT) fall within this spectrum.</p>
-
-    <div class="row">
-        <div class="col-md-6"  >
-            <h2>GNU AGPLv3</h2>
-            <p>Permissions of this strongest copyleft license are conditioned on making available
-                complete source code of licensed works and modifications, which include larger works
-                using a licensed work, under the same license. Copyright and license notices must be preserved.
-                Contributors provide an express grant of patent rights. When a modified version is used to
-                provide a service over a network, the complete source code of the modified version must be
-                made available.
-            </p>
         </div>
+    </div>
 
+
+    {% for line in lst %}
+     <div class="row" style="margin: 40px;">
+        <div class="col-md-6"  >
+            <h2>{{ line.abbreviation }}</h2>
+            <p>{{ line.synopsis }}</p>
+        </div>
         <div class="col-md-6" >
-            <table class="table">
+            <table class="table" style="margin: 0;">
                 <caption> </caption>
                 <thead>
                 <tr >
-                    <th class="text-center">Permissions</th>
-                    <th class="text-center">Conditions</th>
-                    <th class="text-center">Limitations</th>
+                    <th class="text-center text-success">Permissions</th>
+                    <th class="text-center text-primary">Conditions</th>
+                    <th class="text-center text-danger">Limitations</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td>
-                        <ul>
-                            <li>Commercial use</li>
-                            <li>Distribution</li>
-                            <li>Modification</li>
-                            <li>Patent use</li>
-                            <li>Private use</li>
+                        <ul class="text-success">
+                            {% for permission in line.permissions %}
+                            <li data-toggle="tooltip" data-placement="bottom" title="{{ permission.meaning }}">{{ permission.name }}</li>
+                            {% endfor %}
                         </ul>
                     </td>
                     <td>
-                        <ul>
-                            <li>Disclose source</li>
-                            <li>License and copyright notice</li>
-                            <li>Network use is distribution</li>
-                            <li>Network use is distribution</li>
-                            <li>Same license</li>
-                            <li>State changes</li>
+                        <ul class="text-primary">
+                            {% for condition in line.conditions %}
+                            <li data-toggle="tooltip" data-placement="bottom" title="{{ condition.meaning }}">{{ condition.name }}</li>
+                            {% endfor %}
                         </ul>
                     </td>
-                    <td>
-                        <ul>
-                            <li>Liability</li>
-                            <li>Warranty</li>
+                    <td
+                        <ul class="text-danger">
+                            {% for limitation in line.limitations %}
+                            <li data-toggle="tooltip" data-placement="bottom" title="{{ limitation.meaning }}">{{ limitation.name }}</li>
+                            {% endfor %}
                         </ul>
                     </td>
                 </tr>
                 </tbody>
             </table>
+            <a href="/license/introduction/{{ line.abbreviation }}">View full description of {{ line.name }} <small>>></small></a>
         </div>
     </div>
-
-    <div class="row">
-        <div class="col-md-6"  >
-            <h2>GNU AGPLv3</h2>
-            <p>Permissions of this strongest copyleft license are conditioned on making available
-                complete source code of licensed works and modifications, which include larger works
-                using a licensed work, under the same license. Copyright and license notices must be preserved.
-                Contributors provide an express grant of patent rights. When a modified version is used to
-                provide a service over a network, the complete source code of the modified version must be
-                made available.
-            </p>
-        </div>
-
-        <div class="col-md-6" >
-            <table class="table">
-                <caption>基本的表格布局</caption>
-                <thead>
-                <tr>
-                    <th>名称</th>
-                    <th>城市</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>Tanmay</td>
-                    <td>Bangalore</td>
-                </tr>
-                <tr>
-                    <td>Sachin</td>
-                    <td>Mumbai</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    {% endfor %}
 </div>
 
+
+<script>
+	$(function () { $("[data-toggle='tooltip']").tooltip(); });
+</script>
 </body>
 </html>
