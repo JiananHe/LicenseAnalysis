@@ -3,8 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <title>Compliance</title>
+    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.staticfile.org/jquery/2.0.0/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+          mark {
+              background-color: #ffff00;
+          }
+    </style>
 </head>
 <body>
-Hello. You're at the compliance index.
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid bg-primary">
+        <div class="navbar-header ">
+            <a class="navbar-brand" href="/license" style="color: aliceblue"><strong>Home</strong></a>
+            <a class="navbar-brand" href="/license/introduction" style="color: aliceblue"><strong>Introduction</strong></a>
+            <a class="navbar-brand" href="/license/customization" style="color: aliceblue"><strong>Customization</strong></a>
+            <a class="navbar-brand" href="/license/compliance" style="color: darkred"><strong>Compliance</strong></a>
+            <a class="navbar-brand" href="/license/conflict" style="color: aliceblue"><strong>Conflict</strong></a>
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="page-header">
+        <div class="container">
+            <h1>Compliance</h1>
+        </div>
+    </div>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form action="/license/compliance" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label>File:</label>
+                    <input type="file" id="user_file" name="user_file" class="btn btn-default">
+                </div>
+                <div class="form-group">
+                    <label>Or license content:</label>
+                    <textarea class="form-control" id="user_input" rows="5" cols="60"
+                              placeholder="Please input the license content..." name="user_input"></textarea>
+                </div>
+                <button type="submit" id="try_out" class="btn btn-primary">Analyse</button>
+            </form>
+            <br>
+            <div class="panel panel-info" {{ hidden }}>
+                <div class="panel-heading">
+                    <h4>License Compliance Analysis Result: </h4>
+                </div>
+                <div class="panel-body">
+                    <h5>Result: {{ result }}</h5>
+                    <h5>Report Text:</h5>
+                    <pre>
+                        <p id="content"></p>
+                    </pre>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+$(function() {
+        var content = {{ text|safe }};
+        $("#content").html(content);
+});
+</script>
+
 </body>
+
 </html>
