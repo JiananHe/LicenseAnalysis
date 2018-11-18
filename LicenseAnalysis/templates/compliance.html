@@ -54,8 +54,6 @@
                     <h4>License Compliance Analysis Result: </h4>
                 </div>
                 <div class="panel-body">
-                    <h5>Result: {{ result }}</h5>
-                    <h5>Report Text:</h5>
                     <pre>
                         <p id="content"></p>
                     </pre>
@@ -69,7 +67,7 @@
 <script type="text/javascript">
 
 $(function() {
-        var content = {{ text|safe }};
+        var content = {{ result|safe }};
         $("#content").html(content);
 });
 </script>

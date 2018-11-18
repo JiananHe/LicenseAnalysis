@@ -33,13 +33,9 @@ def index(request):
 
             text = upload_file(myfile)
 
-        # ctx['text'] = text
-        # ctx['result'] = LCA.contentAnalysis(text)
-        # ctx['hidden'] = ""
         result = LCA.contentAnalysis(text)
 
-        return render(request, "compliance.html", {'text': json.dumps(text),
-                                                   'result': json.dumps(result),
+        return render(request, "compliance.html", {'result': json.dumps(result),
                                                    'hidden': ""})
     else:
         # ctx['hidden'] = "hidden"
