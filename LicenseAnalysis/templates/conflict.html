@@ -34,13 +34,8 @@
             <form action="/license/conflict" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label>File:</label>
-                    <input type="file" id="user_file" name="user_file" class="btn btn-default">
-                </div>
-                <div class="form-group">
-                    <label>Or license content:</label>
-                    <textarea class="form-control" id="user_input" rows="5" cols="60"
-                              placeholder="Please input the license content..." name="user_input"></textarea>
+                    <label>Folder:</label>
+                    <input type="file" multiple="" webkitdirectory="" id="user_folder" name="user_folder" class="btn btn-default">
                 </div>
                 <button type="submit" id="try_out" class="btn btn-primary">Analyse</button>
             </form>
