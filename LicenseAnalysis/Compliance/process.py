@@ -1,4 +1,4 @@
-from LicenseAnalysis.func import *
+from Compliance.func import *
 
 o2t = []  # convert the corresponding position, original text --> trimmed  text
 t2o = []  # convert the corresponding position, trimmed  text --> original text

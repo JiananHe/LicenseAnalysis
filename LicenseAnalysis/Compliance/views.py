@@ -1,10 +1,12 @@
-import time
+import json
 import os
 import sys
-import json
+import time
+
 from django.http import HttpResponse
 from django.shortcuts import render
-import LicenseAnalysis.licenseContentAnalyse as LCA
+
+import Compliance.licenseContentAnalyse as LCA
 
 
 def upload_file(myfile):

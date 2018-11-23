@@ -1,4 +1,4 @@
-from LicenseAnalysis.process import *
+from Compliance.process import *
 
 
 def contentAnalysis(text):
