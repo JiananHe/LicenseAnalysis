@@ -1,5 +1,12 @@
 from Compliance.process import *
 
+# import model settings
+import os
+os.environ['DJANGO_SETTINGS_MODULE']='LicenseAnalysis.settings'
+import django
+django.setup()
+import LicenseModel.models as LM
+
 
 def contentAnalysis(text):
     """
@@ -10,6 +17,16 @@ def contentAnalysis(text):
     print(text)
     # your analysis process
     trim_space(text)
+
+    # database access object
+    all_licenses_key = LM.getLicensesKey()
+    print(type(all_licenses_key))
+    print(all_licenses_key)
+
+    csv_id = LM.getLicenseCsvId(21)
+    print(type(csv_id))
+    print(csv_id)
+
     result_model = model_process("version 2.0 # General Public License")
 
     print(result_model[1])
@@ -27,4 +44,4 @@ def contentAnalysis(text):
     return tmp
 
 
-# contentAnalysis("under the terms of the GNU Generel Public License test_chararcter version 2 as published by the Free Software Foundation.")
+contentAnalysis("under the terms of the GNU Generel Public License test_chararcter version 2 as published by the Free Software Foundation.")
