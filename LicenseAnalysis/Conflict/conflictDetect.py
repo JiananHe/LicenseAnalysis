@@ -32,13 +32,6 @@ class Conflict(object):
         return cpResult
 
 
-
-
-
-
-
-
-
 if __name__=="__main__":
     licenses={}
     licenses[0]=9

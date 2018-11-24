@@ -10,6 +10,10 @@ class license_description(models.Model):
     permissions = models.IntegerField(null=True)
     conditions = models.IntegerField(null=True)
     limitations = models.IntegerField(null=True)
+    # add for compliance code
+    text_key = models.TextField(null=True)
+    # add for conflict code
+    csv_id = models.IntegerField(null=True)
 
 
 class permission(models.Model):
@@ -83,12 +87,12 @@ def searchLicense(search_text):
     print(search_text)
     if search_text == '':
         # if no search text, then return all license info
-        result_list = license_description.objects.all()
+        entries = license_description.objects.all()
     else:
         # search specific licenses
-        result_list = license_description.objects.filter(abbreviation__icontains=search_text)
+        entries = license_description.objects.filter(abbreviation__icontains=search_text)
 
-    for entry in result_list:
+    for entry in entries:
         permissions = search_permissions(entry.permissions)
 
         conditions = search_conditions(entry.conditions)
@@ -108,5 +112,28 @@ def searchContent(search_text):
     :param search_text: abbreviation of a license
     :return: the name, abbreviation and content of the license
     """
-    result_list = license_description.objects.get(abbreviation=search_text)
-    return {'name': result_list.name, 'abbreviation': result_list.abbreviation, 'content': result_list.content}
+    entries = license_description.objects.get(abbreviation=search_text)
+    return {'name': entries.name, 'abbreviation': entries.abbreviation, 'content': entries.content}
+
+
+def getLicensesKey():
+    """
+    Return all licenses key
+    :return:
+    """
+    entries = license_description.objects.values("text_key")
+    return_list = []
+    for entry in entries:
+        return_list.append(entry["text_key"])
+
+    return return_list
+
+
+def getLicenseCsvId(id_num):
+    """
+    get the license id in csv file according to the standard id
+    :param id_num: the standard license id in description table
+    :return: the id in csv file
+    """
+    entry = license_description.objects.get(id=id_num)
+    return entry.csv_id
