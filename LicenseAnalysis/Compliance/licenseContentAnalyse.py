@@ -26,6 +26,7 @@ class MyThread(threading.Thread):
 
     def get_result(self):
         try:
+            # print(self.result)
             return self.result
         except Exception:
             return None
@@ -64,6 +65,8 @@ def find_all_possible_license(text_origin):
         t.join()
     for t in threads:
         detect_result = t.get_result()
+        if detect_result == None:
+            return [-1, -1, -1, -1, -1]
         if detect_result[0] == True:
             is_detected = True
             detection_info = [detect_result[5], detect_result[1], detect_result[2],
@@ -71,7 +74,7 @@ def find_all_possible_license(text_origin):
             # print(detection_info)
     if is_detected == False:
         detection_info = [-1, -1, -1, -1, -1]
-    print(detection_info)
+    print("The detection_info is ", detection_info)
     return detection_info
 
 def get_license_id(text):
@@ -116,8 +119,9 @@ if __name__ == '__main__':
     text_origin_2 = "under the terms of the under the European Union Public Licence chararcter v1.1 aaa."
     bb = "under the terms of the under Microsoft Reciprocal License | Ms-RL"
     aa = "V.1.1# European Union Public Licence| EUPL"
-    generate_license_presentation(text_origin_2)
-    id = get_license_id(text_origin_2)
+    cc = "a"
+    generate_license_presentation(cc)
+    #id = get_license_id(cc)
     print(id)
     # all_licenses_key = LM.getLicensesKey()
     # print(type(all_licenses_key))

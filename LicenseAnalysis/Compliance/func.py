@@ -66,7 +66,7 @@ def levenshtein_distance(first, second):
         return len(first) + len(second)
     first_length = len(first) + 1
     second_length = len(second) + 1
-    distance_matrix = [list(range(second_length)) for i in list(range(first_length))]  # 初始化矩阵
+    distance_matrix = [[i+j for j in list(range(second_length))] for i in list(range(first_length))]  # 初始化矩阵
     for i in list(range(1, first_length)):
         for j in list(range(1, second_length)):
             deletion = distance_matrix[i-1][j] + 1
@@ -85,3 +85,14 @@ if __name__ == '__main__':
     print(get_version('version 35+ 66'))
     print(get_version('35 + 66'))
     print(get_version('aaa 35 66'))
+
+    print(levenshtein_distance("Mozilla", "Moz"))
+    print(levenshtein_distance("Mozilla", "Mozi"))
+    print(levenshtein_distance("hhhhhh", "h"))
+
+    print(levenshtein_distance("hhhhhh", "h"))
+
+    print(levenshtein_distance("h", "hhhhhh"))
+
+    matrix = [[i+j for j in range(4)] for i in range(4)]
+    print(matrix)

@@ -58,7 +58,7 @@ def text_process(text, model, version):
             # print(text_word)
             dis = levenshtein_distance(model_word, text_word)
             # if satisfy the difference degree(or the similarity degree)
-            if dis/len(model_word) < 0.2:
+            if dis/min(len(model_word), len(text_word)) < 0.2:
                 # record the start position of the license
                 if count == 0:
                     head = i
@@ -125,7 +125,7 @@ def model_process(model_string):
 
 
 if __name__ == '__main__':
-    aa = "V.1.1# European Union Public Licence| EUPL"
+    aa = "V1.1# European Union Public Licence| EUPL"
     re = model_process(aa)
     print(re[0])
     print(re[1])
