@@ -1,15 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load static %}
+
 <head>
     <meta charset="UTF-8">
     <title>Compliance</title>
-    <link href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
-    <script src="https://cdn.staticfile.org/jquery/2.0.0/jquery.min.js"></script>
-    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href=" {% static "jquerytree/css/bootstrap.min.css"%}" rel="stylesheet"/>
+    <link href=" {% static "jquerytree/css/style.css"%}" rel="stylesheet"/>
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <style>
           mark {
               background-color: #ffff00;
+          }
+          a{
+              cursor: pointer;
           }
     </style>
 </head>
@@ -26,36 +34,71 @@
     </div>
 </nav>
 
-<div class="container">
-    <div class="page-header">
-        <div class="container">
-            <h1>Compliance</h1>
-        </div>
+<div style="margin: 40px;">
+    <div class="page-header" style="margin-top: 70px;">
+        <h2 class="text-primary"><strong>Licenses Compliance</strong></h2>
     </div>
 
     <div class="panel panel-default">
         <div class="panel-body">
             <form action="/license/compliance" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label>File:</label>
-                    <input type="file" id="user_file" name="user_file" class="btn btn-default">
+                <div style="" class="col">
+                    <div class="row-md-6 row">
+                        <div class="col-md-6">
+                            <div class="form-group" style="padding-left: 5px;">
+                                <strong> Folder:</strong>
+                                <input type="file" multiple="" webkitdirectory="" id="user_folder" name="user_folder"
+                                       onchange="folderClick()" class="btn btn-default" style="height: 38px">
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <strong> File:</strong>
+                                <input type="file" id="user_file" name="user_file" class="btn btn-default"
+                                       onchange="fileClick()" style="height: 38px">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row-md-6">
+                        <div class="form-group">
+                            <strong> license content:</strong>
+                            <textarea class="form-control" id="user_input" rows="5" cols="60"
+                                      placeholder="Please input the license content..." name="user_input" onchange="textInput()"></textarea>
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label>Or license content:</label>
-                    <textarea class="form-control" id="user_input" rows="5" cols="60"
-                              placeholder="Please input the license content..." name="user_input"></textarea>
-                </div>
-                <button type="submit" id="try_out" class="btn btn-primary">Analyse</button>
+
+                <button type="submit" id="try_out" class="btn btn-primary" onclick="analysisClick()">Analyse</button>
             </form>
-            <br>
-            <div class="panel panel-info" {{ hidden }}>
+
+            <div class="row-md-6 row" {{ hidden1 }}>
+                <div class="col-md-4">
+                    <div class="tree well" id="tree_struct" name="tree_struct" style="padding-left: 7px" v-html="message">
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="panel panel-info">
                 <div class="panel-heading">
                     <h4>License Compliance Analysis Result: </h4>
                 </div>
                 <div class="panel-body">
                     <pre>
-                        <p id="content"></p>
+                        <p id="folder_content"></p>
+                    </pre>
+
+                </div>
+            </div>
+                </div>
+            </div>
+
+            <div class="panel panel-info" {{ hidden2 }}>
+                <div class="panel-heading">
+                    <h4>License Compliance Analysis Result: </h4>
+                </div>
+                <div class="panel-body">
+                    <pre>
+                        <p id="file_content"></p>
                     </pre>
 
                 </div>
@@ -65,11 +108,73 @@
 </div>
 
 <script type="text/javascript">
-
 $(function() {
         var content = {{ result|safe }};
-        $("#content").html(content);
+        $("#file_content").html(content);
 });
+</script>
+
+<script>
+function HTMLDecode(text) {
+    var temp = document.createElement("div");
+    temp.innerHTML = text;
+    var output = temp.innerText || temp.textContent;
+    temp = null;
+    return output;
+}
+function showContent(file_id){
+    file_id = String(file_id);
+    alert(String(file_id));
+    var content = '{{ file_id }}'
+    $("#folder_content").html(content);
+}
+$(function() {
+    var content = '{{ tree_content }}'
+    content = HTMLDecode(content);
+    new Vue({
+        el: '#tree_struct',
+        data: {
+            message: content
+        }
+    })
+});
+</script>
+
+<script type="text/javascript">
+
+function fileClick(){
+    document.getElementById("user_folder").disabled = true;
+    document.getElementById("user_input").readOnly = true;
+}
+function folderClick(){
+    document.getElementById("user_file").disabled = true;
+    document.getElementById("user_input").readOnly = true;
+}
+function textInput(){
+    document.getElementById("user_file").disabled = true;
+    document.getElementById("user_folder").disabled = true;
+}
+function analysisClick(){
+    document.getElementById("user_input").readOnly = true;
+    document.getElementById("user_file").disabled = false;
+    document.getElementById("user_folder").disabled = false;
+}
+</script>
+<script type="text/javascript">
+　　$(function(){
+    　　$('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+    　　$('.tree li.parent_li > span').on('click', function (e) {
+       　　 var children = $(this).parent('li.parent_li').find(' > ul > li');
+        　　if (children.is(":visible")) {
+            　　children.hide('fast');
+            　　$(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+        　　} else {
+            　　children.show('fast');
+            　　$(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+        　　}
+        　　e.stopPropagation();
+    　　});
+　　});
 </script>
 
 </body>
