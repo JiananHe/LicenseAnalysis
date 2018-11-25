@@ -35,7 +35,7 @@ def index(request):
 
             text = upload_file(myfile)
 
-        result = LCA.contentAnalysis(text)
+        result = LCA.generate_license_presentation(text)
 
         return render(request, "compliance.html", {'result': json.dumps(result),
                                                    'hidden': ""})
