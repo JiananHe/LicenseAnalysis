@@ -74,6 +74,7 @@ def find_all_possible_license(text_origin):
     print(detection_info)
     return detection_info
 
+
 def get_license_id(text):
     result_process = find_all_possible_license(text)
     return result_process[0]
@@ -97,6 +98,7 @@ def generate_license_presentation(text):
     # print(csv_id)
 
     result_process = find_all_possible_license(text)
+
     # print(result_process)
     tmp = text
     if result_process[0] != -1:
@@ -105,10 +107,10 @@ def generate_license_presentation(text):
                   '</mark>' + tmp[result_process[4]:len(tmp)]
         tmp = tmp[0:result_process[1]] + '<mark>' + tmp[result_process[1]:result_process[2]] + '</mark>' \
               + tmp[ result_process[2]:len(tmp)]
-    print(text)
-    print(tmp)
 
-    return tmp
+
+    license_id = get_license_id(text_origin_2)
+    return license_id, tmp
 
 if __name__ == '__main__':
     print()
