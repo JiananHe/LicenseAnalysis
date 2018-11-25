@@ -41,7 +41,8 @@ def contentAnalysis(text):
               + tmp[ result_process[2]:len(tmp)]
     # print(tmp)
 
-    return tmp
+    license_id = 31
+    return license_id, tmp
 
 
 contentAnalysis("under the terms of the GNU Generel Public License test_chararcter version 2 as published by the Free Software Foundation.")
