@@ -35,8 +35,7 @@ def upload_folder(myfolder):
     # web tree structure html string
     tree_content = r'<ul>'
     # dict with all file name and its content after analysis
-    # files_content = {}
-    return_dict = {}
+    files_content = {}
 
     dir_stack = []
     dir_layer = 0
@@ -67,7 +66,7 @@ def upload_folder(myfolder):
         # get license id
         licenseAbbr = LM.getLicenseAbbr(licenseId)
 
-        return_dict[str(file_tag)] = tmp
+        files_content[str(file_tag)] = json.dumps(tmp)
 
         # record file directory structure
         for pt in path_list:
@@ -80,8 +79,11 @@ def upload_folder(myfolder):
 
     # tree_content += r'<span><i class="icon-folder-open"></i> 顶级节点1</span> <a onclick=showContent(' + str(file_id) +')>Abbreviation</a>'
     tree_content += r'</ul>'
-    return_dict['tree_content'] = tree_content
-    return return_dict
+
+    # avoid character transferred
+    # files_content = str(files_content).encode("unicode-escape")
+    # files_content=str(files_content).replace("\'", "\"")
+    return files_content, tree_content
 
 
 # Create your views here.
@@ -90,14 +92,13 @@ def index(request):
         # user upload a folder
         myfolder = request.FILES.getlist("user_folder", None)
         if myfolder:
-            ctx = {'hidden1': "", 'hidden2': "Hidden"}
-            ctx1 = upload_folder(myfolder)
-            ctx = dict(ctx, **ctx1) # merge two dict
+            files_content, tree_content = upload_folder(myfolder)
 
             # print("======================== " + tree_content)
             # print("======================== " + str(files_content))
-            print(str(ctx))
-            return render(request, "compliance.html", ctx)
+            return render(request, "compliance.html", {'hidden1': "", 'hidden2': "Hidden",
+                                                       'files_content': files_content,
+                                                       'tree_content': tree_content})
 
         # user upload a file
         myfile = request.FILES.get("user_file", None)

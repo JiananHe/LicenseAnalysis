@@ -109,24 +109,30 @@
 
 <script type="text/javascript">
 $(function() {
-        var content = {{ result|safe }};
+        var content = {{ result|safe }}
         $("#file_content").html(content);
 });
 </script>
-
 <script>
+function showContent(file_tag){
+    file_id = String(file_tag);
+    var content = "";
+    {% for key, value in files_content.items %}
+        if("{{ key }}" == file_tag){
+            content = {{ value|safe }}
+        }
+    {% endfor %}
+
+    $("#folder_content").html(content);
+}
+</script>
+<script type="text/javascript">
 function HTMLDecode(text) {
     var temp = document.createElement("div");
     temp.innerHTML = text;
     var output = temp.innerText || temp.textContent;
     temp = null;
     return output;
-}
-function showContent(file_id){
-    file_id = String(file_id);
-    alert(String(file_id));
-    var content = '{{ file_id }}'
-    $("#folder_content").html(content);
 }
 $(function() {
     var content = '{{ tree_content }}'
@@ -141,7 +147,6 @@ $(function() {
 </script>
 
 <script type="text/javascript">
-
 function fileClick(){
     document.getElementById("user_folder").disabled = true;
     document.getElementById("user_input").readOnly = true;
