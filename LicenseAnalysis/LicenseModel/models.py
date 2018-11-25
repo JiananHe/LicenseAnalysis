@@ -135,5 +135,15 @@ def getLicenseCsvId(id_num):
     :param id_num: the standard license id in description table
     :return: the id in csv file
     """
-    entry = license_description.objects.get(id=id_num)
-    return entry.csv_id
+    if id_num != -1:
+        entry = license_description.objects.get(id=id_num)
+        return entry.csv_id
+    else:
+        return ''
+
+def getLicenseAbbr(id_num):
+    if id_num != -1:
+        entry = license_description.objects.get(id=id_num)
+        return entry.abbreviation
+    else:
+        return 'no license'

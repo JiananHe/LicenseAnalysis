@@ -77,6 +77,7 @@ def find_all_possible_license(text_origin):
     print("The detection_info is ", detection_info)
     return detection_info
 
+
 def get_license_id(text):
     result_process = find_all_possible_license(text)
     return result_process[0]
@@ -98,8 +99,8 @@ def generate_license_presentation(text):
     # csv_id = LM.getLicenseCsvId(21)
     # print(type(csv_id))
     # print(csv_id)
-
     result_process = find_all_possible_license(text)
+
     # print(result_process)
     tmp = text
     if result_process[0] != -1:
@@ -108,17 +109,19 @@ def generate_license_presentation(text):
                   '</mark>' + tmp[result_process[4]:len(tmp)]
         tmp = tmp[0:result_process[1]] + '<mark>' + tmp[result_process[1]:result_process[2]] + '</mark>' \
               + tmp[ result_process[2]:len(tmp)]
-    print(text)
-    print(tmp)
 
-    return tmp
+
+    license_id = get_license_id(text)
+    return license_id, tmp
 
 if __name__ == '__main__':
     print()
+    text_origin_0 = "q"
     text_origin_1 = "under the terms of the under the Academic Free License test_chararcter version 3.0 as published by the Free Software Foundation."
     text_origin_2 = "under the terms of the under the European Union Public Licence chararcter v1.1 aaa."
     bb = "under the terms of the under Microsoft Reciprocal License | Ms-RL"
     aa = "V.1.1# European Union Public Licence| EUPL"
+
     cc = "a"
     generate_license_presentation(cc)
     #id = get_license_id(cc)
