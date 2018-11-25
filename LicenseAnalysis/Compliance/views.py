@@ -72,7 +72,7 @@ def upload_folder(myfolder):
         text = str(fob.read())
         new_file.close()
 
-        licenseId, tmp = LCA.contentAnalysis(text)
+        licenseId, tmp = LCA.generate_license_presentation(text)
 
         # get license id
         licenseAbbr = LM.getLicenseAbbr(licenseId)
@@ -125,6 +125,7 @@ def index(request):
         if myfolder:
             files_content, tree_content = upload_folder(myfolder)
 
+
             # print("======================== " + tree_content)
             # print("======================== " + str(files_content))
             return render(request, "compliance.html", {'hidden1': "", 'hidden2': "Hidden",
@@ -133,14 +134,14 @@ def index(request):
         elif myfile:
             text = upload_file(myfile)
             print("============= user file text : " + text)
-            id, result = LCA.contentAnalysis(text)
+            id, result = LCA.generate_license_presentation(text)
             return render(request, "compliance.html", {'result': json.dumps(result),
                                                        'hidden1': "Hidden",
                                                        'hidden2': ""})
         elif text != "":
             text = str(text)
             print("========== use input text : " + text)
-            id, result = LCA.contentAnalysis(text)
+            id, result = LCA.generate_license_presentation(text)
             return render(request, "compliance.html", {'result': json.dumps(result),
                                                        'hidden1': "Hidden",
                                                        'hidden2': ""})

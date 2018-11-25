@@ -15,7 +15,7 @@ def get_version(initial_str):
         first_iter = list(re.finditer(r'\d+\.\d+|\d+', initial_str))[0]
         version_number = first_iter.group()
         version_span = first_iter.span()
-    elif str[0] == 'v' and str[1].isdigit():
+    elif (str[0] == 'v' or str[0] == 'V') and str[1].isdigit():
         first_iter = list(re.finditer(r'\d+\.\d+|\d+', initial_str))[0]
         version_number = first_iter.group()
         version_span = first_iter.span()

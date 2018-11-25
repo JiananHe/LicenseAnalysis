@@ -19,6 +19,8 @@ def trim_space(pre):
     post = ''
     length = len(pre)
     count = 0
+    o2t.clear()
+    t2o.clear()
     for i in list(range(0, length)):
         if pre[i] != ' ':
             post += pre[i]
@@ -86,7 +88,9 @@ def text_process(text, model, version):
             return [False, -1, -1, -1, -1]
     # if the license has have the version information
     else:
-        # now, the i point to  the next character of the tail of the license string
+        if i >= text_length:
+            return [False, -1, -1, -1, -1]
+        # now, the i point to the next character of the tail of the license string
         next_char_position = t2o[o2t[i-1] + 1]
         if text[next_char_position].isdigit():
             text_version = get_version(text[next_char_position: next_char_position+10])
@@ -114,12 +118,17 @@ def text_process(text, model, version):
 def model_process(model_string):
     model_split = model_string.split('#')
     model_license_number = model_split[0]
-    model_text = model_split[1].strip()
+
+    model_text = model_split[1].split('|')[0]
+    model_text = model_text.strip()
     return [model_license_number, model_text]
 
 
-# if __name__ == '__main__':
-#     trim_space(text)
+if __name__ == '__main__':
+    aa = "V.1.1# European Union Public Licence| EUPL"
+    re = model_process(aa)
+    print(re[0])
+    print(re[1])
 #
 #     result_model = model_process("version 2.0 # General Public License")
 #     print(result_model[1])
