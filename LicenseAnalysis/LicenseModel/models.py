@@ -137,3 +137,7 @@ def getLicenseCsvId(id_num):
     """
     entry = license_description.objects.get(id=id_num)
     return entry.csv_id
+
+def getLicenseAbbr(id_num):
+    entry = license_description.objects.get(id=id_num)
+    return entry.abbreviation
