@@ -21,24 +21,43 @@ def upload_file(myfile):
     fob = open(newPath)
     text = fob.read()
     newFile.close()
-    return text
+    return str(text)
+
+
+def upload_folder(myfolder):
+    return "2"
 
 
 # Create your views here.
 def index(request):
     if request.POST:
-        text = request.POST['user_input']
-        if text == "":
-            myfile = request.FILES.get("user_file", None)
-            if not myfile:
-                return HttpResponse("no file and no text!")
+        # user upload a folder
+        myfolder = request.FILES.getlist("user_folder", None)
+        if myfolder:
+            upload_folder(myfolder)
+            return
 
+        # user upload a file
+        myfile = request.FILES.get("user_file", None)
+        if myfile:
             text = upload_file(myfile)
+            print("============= user file text : " + text)
+            result = LCA.contentAnalysis(text)
+            return render(request, "compliance.html", {'result': json.dumps(result),
+                                                       'hidden1': "Hidden",
+                                                       'hidden2': ""})
 
-        result = LCA.contentAnalysis(text)
+        # user input license content
+        text = request.POST['user_input']
+        if text != "":
+            text = str(text)
+            print("========== use input text : " + text)
+            result = LCA.contentAnalysis(text)
+            return render(request, "compliance.html", {'result': json.dumps(result),
+                                                       'hidden1': "Hidden",
+                                                       'hidden2': ""})
 
-        return render(request, "compliance.html", {'result': json.dumps(result),
-                                                   'hidden': ""})
+
     else:
         # ctx['hidden'] = "hidden"
-        return render(request, "compliance.html", {'hidden': "Hidden"})
+        return render(request, "compliance.html", {'hidden1': "Hidden", 'hidden2': "Hidden"})
