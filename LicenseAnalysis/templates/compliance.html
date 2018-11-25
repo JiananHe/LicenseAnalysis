@@ -69,18 +69,19 @@
                     </div>
                 </div>
 
-                <button type="submit" id="try_out" class="btn btn-primary" onclick="analysisClick()">Analyse</button>
+                <button type="submit" id="try_out" class="btn btn-primary" onclick="analysisClick()">Compliance Analyse</button>
             </form>
 
             <div class="row-md-6 row" {{ hidden1 }}>
                 <div class="col-md-4">
                     <div class="tree well" id="tree_struct" name="tree_struct" style="padding-left: 7px" v-html="message">
                     </div>
+                    <button type="button" id="try_out2" class="btn btn-primary" onclick="conflictClick()">Conflict Analyse</button>
                 </div>
                 <div class="col-md-8">
                     <div class="panel panel-info">
                 <div class="panel-heading">
-                    <h4>License Compliance Analysis Result: </h4>
+                    <h4 id="resultTitle">License Compliance Analysis Result: </h4>
                 </div>
                 <div class="panel-body">
                     <pre>
@@ -100,8 +101,8 @@
                     <pre>
                         <p id="file_content"></p>
                     </pre>
-
                 </div>
+
             </div>
         </div>
     </div>
@@ -112,6 +113,15 @@ $(function() {
         var content = {{ result|safe }}
         $("#file_content").html(content);
 });
+</script>
+
+<script>
+function conflictClick(){
+    $("#resultTitle").html("License Conflict Analysis Result: ");
+
+    var content = {{ conflict_result|safe }}
+    $("#folder_content").html(content);
+}
 </script>
 <script>
 function showContent(file_tag){
@@ -124,6 +134,7 @@ function showContent(file_tag){
     {% endfor %}
 
     $("#folder_content").html(content);
+    $("#resultTitle").html("License Compliance Analysis Result: ");
 }
 </script>
 <script type="text/javascript">

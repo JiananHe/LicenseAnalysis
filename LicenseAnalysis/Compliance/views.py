@@ -9,6 +9,7 @@ from django.shortcuts import render
 
 import LicenseModel.models as LM
 import Compliance.licenseContentAnalyse as LCA
+import Conflict.conflictDetect as LCD
 
 
 def upload_file(myfile):
@@ -49,6 +50,9 @@ def upload_folder(myfolder):
     # dict with all file name and its content after analysis
     files_content = {}
 
+    # license id dict(file_path: license_id), archived for conflict detection
+    license_id_dict = {}
+
     dir_stack = []
     dir_name = ""
     file_id = 0
@@ -72,9 +76,11 @@ def upload_folder(myfolder):
         text = str(fob.read())
         new_file.close()
 
+        # call the compliance code
         licenseId, tmp = LCA.generate_license_presentation(text)
+        license_id_dict[file_path] = licenseId
 
-        # get license id
+        # get license abbreviation
         licenseAbbr = LM.getLicenseAbbr(licenseId)
 
         files_content[str(file_tag)] = json.dumps(tmp)
@@ -103,13 +109,11 @@ def upload_folder(myfolder):
                 dir_stack.append(pt)
                 tree_content += treeHtmlCode(pt, dir_layer)
 
-    # tree_content += r'<span><i class="icon-folder-open"></i> 顶级节点1</span> <a onclick=showContent(' + str(file_id) +')>Abbreviation</a>'
     tree_content += r'</ul>'
 
-    # avoid character transferred
-    # files_content = str(files_content).encode("unicode-escape")
-    # files_content=str(files_content).replace("\'", "\"")
-    return files_content, tree_content
+    conflict_ditector= LCD.Conflict(license_id_dict, len(license_id_dict))
+    conflict_result = conflict_ditector.detect()
+    return files_content, tree_content, conflict_result
 
 
 # Create your views here.
@@ -123,14 +127,12 @@ def index(request):
         text = request.POST['user_input']
 
         if myfolder:
-            files_content, tree_content = upload_folder(myfolder)
+            files_content, tree_content, conflict_result = upload_folder(myfolder)
 
-
-            # print("======================== " + tree_content)
-            # print("======================== " + str(files_content))
             return render(request, "compliance.html", {'hidden1': "", 'hidden2': "Hidden",
                                                        'files_content': files_content,
-                                                       'tree_content': tree_content})
+                                                       'tree_content': tree_content,
+                                                       'conflict_result': json.dumps(conflict_result)})
         elif myfile:
             text = upload_file(myfile)
             print("============= user file text : " + text)
