@@ -21,7 +21,7 @@ def upload_file(myfile):
         newFile.write(chunk)
     newFile.close()
 
-    fob = open(newPath)
+    fob = open(newPath, 'r', encoding='UTF-8')
     text = fob.read()
     newFile.close()
     return str(text)
