@@ -49,6 +49,8 @@ def upload_folder(myfolder):
     tree_content = r'<ul>'
     # dict with all file name and its content after analysis
     files_content = {}
+    # dict with all file name and its license name after analysis
+    license_names = {}
 
     # license id dict(file_path: license_id), archived for conflict detection
     license_id_dict = {}
@@ -85,6 +87,9 @@ def upload_folder(myfolder):
 
         files_content[str(file_tag)] = json.dumps(tmp)
 
+        license_name = LM.getLicenseName(licenseId)
+        license_names[str(file_tag)] = json.dumps(license_name)
+
         # record file directory structure
         dir_layer = 0
         for pt in path_list:
@@ -113,7 +118,7 @@ def upload_folder(myfolder):
 
     conflict_ditector= LCD.Conflict(license_id_dict, len(license_id_dict))
     conflict_result = conflict_ditector.detect()
-    return files_content, tree_content, conflict_result
+    return files_content, tree_content, license_names, conflict_result
 
 
 # Create your views here.
@@ -127,17 +132,20 @@ def index(request):
         text = request.POST['user_input']
 
         if myfolder:
-            files_content, tree_content, conflict_result = upload_folder(myfolder)
+            files_content, tree_content, license_names, conflict_result = upload_folder(myfolder)
 
             return render(request, "compliance.html", {'hidden1': "", 'hidden2': "Hidden",
                                                        'files_content': files_content,
+                                                       'license_names': license_names,
                                                        'tree_content': tree_content,
                                                        'conflict_result': json.dumps(conflict_result)})
         elif myfile:
             text = upload_file(myfile)
             print("============= user file text : " + text)
             id, result = LCA.generate_license_presentation(text)
+            license_name = LM.getLicenseName(id)
             return render(request, "compliance.html", {'result': json.dumps(result),
+                                                       'license_name': json.dumps(license_name),
                                                        'hidden1': "Hidden",
                                                        'hidden2': ""})
         elif text != "":
