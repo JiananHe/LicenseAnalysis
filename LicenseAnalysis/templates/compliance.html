@@ -19,6 +19,9 @@
           a{
               cursor: pointer;
           }
+          black{
+              color: #000
+          }
     </style>
 </head>
 <body>
@@ -114,7 +117,7 @@ $(function() {
         $("#file_content").html(content);
 
         var license_name = {{ license_name|safe }}
-        var title = "License Compliance Analysis Result: " + license_name;
+        var title = "License Compliance Analysis Result:  <black>" + license_name + "</black>";
         $("#compliance_title").html(title);
 });
 </script>
@@ -145,7 +148,7 @@ function showContent(file_tag){
             license_name = {{ value|safe }}
     }
     {% endfor %}
-    var title = "License Compliance Analysis Result: " + license_name;
+    var title = "License Compliance Analysis Result: <black>" + license_name + "</black>";
     $("#resultTitle").html(title);
 }
 </script>
