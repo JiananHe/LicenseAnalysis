@@ -9,7 +9,7 @@ def get_version(initial_str):
     :return: [ version number, if exits '+', the start position, the end position ]
     """
     str = initial_str.replace(' ','')
-    if str[0:7] == 'version' and str[7].isdigit():
+    if str[0:7].lower() == 'version' and str[7].isdigit():
         # version_number = re.findall("\d+\.\d+|\d+", str[7:length])[0]
         # print(str[7:length])
         first_iter = list(re.finditer(r'\d+\.\d+|\d+', initial_str))[0]
