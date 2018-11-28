@@ -95,7 +95,7 @@
 
             <div class="panel panel-info" {{ hidden2 }}>
                 <div class="panel-heading">
-                    <h4>License Compliance Analysis Result: </h4>
+                    <h4 id="compliance_title"></h4>
                 </div>
                 <div class="panel-body">
                     <pre>
@@ -112,6 +112,10 @@
 $(function() {
         var content = {{ result|safe }}
         $("#file_content").html(content);
+
+        var license_name = {{ license_name|safe }}
+        var title = "License Compliance Analysis Result: " + license_name;
+        $("#compliance_title").html(title);
 });
 </script>
 
@@ -126,15 +130,23 @@ function conflictClick(){
 <script>
 function showContent(file_tag){
     file_id = String(file_tag);
+
     var content = "";
     {% for key, value in files_content.items %}
         if("{{ key }}" == file_tag){
             content = {{ value|safe }}
         }
     {% endfor %}
-
     $("#folder_content").html(content);
-    $("#resultTitle").html("License Compliance Analysis Result: ");
+
+    var license_name = "";
+    {% for key, value in license_names.items %}
+        if("{{ key }}" == file_tag){
+            license_name = {{ value|safe }}
+    }
+    {% endfor %}
+    var title = "License Compliance Analysis Result: " + license_name;
+    $("#resultTitle").html(title);
 }
 </script>
 <script type="text/javascript">
