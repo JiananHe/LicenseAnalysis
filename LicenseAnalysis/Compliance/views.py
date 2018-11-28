@@ -148,7 +148,8 @@ def index(request):
                                                        'conflict_result': json.dumps(conflict_result)})
         elif myfile:
             text = upload_file(myfile)
-            print("============= user file text : " + text)
+            # print("============= user file text : " + text)
+            # print("========== the end of text : ")
             id, result = LCA.generate_license_presentation(text)
             license_name = LM.getLicenseName(id)
             return render(request, "compliance.html", {'result': json.dumps(result),
@@ -157,9 +158,10 @@ def index(request):
                                                        'hidden2': ""})
         elif text != "":
             text = str(text)
-            print("========== use input text : " + text)
+            # print("========== use input text : " + text)
+            # print("========== the end of text : ")
             id, result = LCA.generate_license_presentation(text)
-            print(result)
+            # print(result)
             license_name = LM.getLicenseName(id)
             return render(request, "compliance.html", {'result': json.dumps(result),
                                                        'license_name': json.dumps(license_name),
