@@ -59,7 +59,6 @@ def upload_folder(myfolder):
     dir_name = ""
     file_id = 0
     for file in myfolder:
-        file_id = file_id + 1
         file_tag = "file" + str(file_id)
         file_path = file.name
         print("each file name: " + file_path)
@@ -80,7 +79,10 @@ def upload_folder(myfolder):
 
         # call the compliance code
         licenseId, tmp = LCA.generate_license_presentation(text)
-        license_id_dict[file_path] = licenseId
+        if not licenseId==-1:
+            license_id_dict[file_id] = licenseId
+            file_id = file_id + 1
+
 
         # get license abbreviation
         licenseAbbr = LM.getLicenseAbbr(licenseId)
@@ -116,8 +118,13 @@ def upload_folder(myfolder):
 
     tree_content += r'</ul>'
 
+    print("---------license_id_dict-------------")
+    print(license_id_dict)
+    print(len(license_id_dict))
     conflict_ditector= LCD.Conflict(license_id_dict, len(license_id_dict))
     conflict_result = conflict_ditector.detect()
+    print("-------conflict_result-----------")
+    print(conflict_result)
     return files_content, tree_content, license_names, conflict_result
 
 
@@ -152,7 +159,10 @@ def index(request):
             text = str(text)
             print("========== use input text : " + text)
             id, result = LCA.generate_license_presentation(text)
+            print(result)
+            license_name = LM.getLicenseName(id)
             return render(request, "compliance.html", {'result': json.dumps(result),
+                                                       'license_name': json.dumps(license_name),
                                                        'hidden1': "Hidden",
                                                        'hidden2': ""})
         else:

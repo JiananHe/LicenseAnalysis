@@ -65,7 +65,7 @@ def find_all_possible_license(text_origin):
         t.join()
     for t in threads:
         detect_result = t.get_result()
-        if detect_result == None:
+        if not detect_result:
             return [-1, -1, -1, -1, -1]
         if detect_result[0] == True:
             is_detected = True
@@ -118,13 +118,13 @@ if __name__ == '__main__':
     print()
     text_origin_0 = "q"
     text_origin_1 = "under the terms of the under the Academic Free License test_chararcter version 3.0 as published by the Free Software Foundation."
-    text_origin_2 = "under the terms of the under the European Union Public Licence chararcter v1.1 aaa."
+    text_origin_2 = "under the terms of the GNU Lesser General Public License version 2.1."
     bb = "under the terms of the under Microsoft Reciprocal License | Ms-RL"
     aa = "V.1.1# European Union Public Licence| EUPL"
 
     cc = "a"
-    generate_license_presentation(cc)
-    #id = get_license_id(cc)
+    generate_license_presentation(text_origin_2)
+    id = get_license_id(text_origin_2)
     print(id)
     # all_licenses_key = LM.getLicensesKey()
     # print(type(all_licenses_key))
