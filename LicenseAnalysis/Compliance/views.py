@@ -72,7 +72,7 @@ def upload_folder(myfolder):
         new_file.close()
 
         # compliance analysis
-        fob = open(new_file_path)
+        fob = open(new_file_path, 'r', encoding='UTF-8')
         text = str(fob.read())
         new_file.close()
 
