@@ -45,7 +45,7 @@ def text_process(text, model, version):
     head = tail  = -1
     model_length = len(model_list)
     i = 0
-    while i < text_length:
+    while i < text_length and i < len(o2t):
         # if the character text[i] is the first character of one word
         if text[i] != ' ' and (i == 0 or text[i-1] == ' '):
             model_word = model_list[count]
@@ -58,7 +58,10 @@ def text_process(text, model, version):
             # print(text_word)
             dis = levenshtein_distance(model_word, text_word)
             # if satisfy the difference degree(or the similarity degree)
-            if dis/min(len(model_word), len(text_word)) < 0.2:
+            if len(model_word)==0 or len(text_word)==0:
+                count = 0
+                i = i + 1
+            elif dis/min(len(model_word), len(text_word)) < 0.2:
                 # record the start position of the license
                 if count == 0:
                     head = i
@@ -88,7 +91,7 @@ def text_process(text, model, version):
             return [False, -1, -1, -1, -1]
     # if the license has have the version information
     else:
-        if i >= text_length:
+        if i >= text_length or i >= len(o2t):
             return [False, -1, -1, -1, -1]
         # now, the i point to the next character of the tail of the license string
         next_char_position = t2o[o2t[i-1] + 1]
