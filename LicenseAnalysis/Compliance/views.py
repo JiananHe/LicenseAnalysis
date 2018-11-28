@@ -160,6 +160,7 @@ def index(request):
             print("========== use input text : " + text)
             id, result = LCA.generate_license_presentation(text)
             print(result)
+
             license_name = LM.getLicenseName(id)
             return render(request, "compliance.html", {'result': json.dumps(result),
                                                        'license_name': json.dumps(license_name),
