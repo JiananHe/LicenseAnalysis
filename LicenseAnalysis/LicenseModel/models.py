@@ -141,9 +141,18 @@ def getLicenseCsvId(id_num):
     else:
         return ''
 
+
 def getLicenseAbbr(id_num):
     if id_num != -1:
         entry = license_description.objects.get(id=id_num)
         return entry.abbreviation
     else:
         return 'no license'
+
+
+def getLicenseName(id_num):
+    if id_num != -1:
+        entry = license_description.objects.get(id=id_num)
+        return entry.name
+    else:
+        return 'no license info'
