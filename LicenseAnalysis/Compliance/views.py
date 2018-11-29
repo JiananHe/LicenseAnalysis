@@ -118,13 +118,14 @@ def upload_folder(myfolder):
 
     tree_content += r'</ul>'
 
-    print("---------license_id_dict-------------")
-    print(license_id_dict)
-    print(len(license_id_dict))
-    conflict_ditector= LCD.Conflict(license_id_dict, len(license_id_dict))
-    conflict_result = conflict_ditector.detect()
-    print("-------conflict_result-----------")
-    print(conflict_result)
+    # print("---------license_id_dict-------------")
+    # print(license_id_dict)
+    # print(len(license_id_dict))
+    # conflict_ditector= LCD.Conflict(license_id_dict, len(license_id_dict))
+    # conflict_result = conflict_ditector.detect()
+    # print("-------conflict_result-----------")
+    # print(conflict_result)
+    conflict_result = ''
     return files_content, tree_content, license_names, conflict_result
 
 

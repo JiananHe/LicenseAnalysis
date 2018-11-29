@@ -14,25 +14,28 @@ class Conflict(object):
             self.lics[i]=licenses[i]-1
 
     def detect(self):
-        # #取出兼容矩阵
-        # A = pd.read_csv('newAMatrix.csv', index_col=0)
-        # cpMatrix=np.copy(A.values)
-        #
-        # counter=0
+        # 取出兼容矩阵
+        # 注意：地址必须写为绝对地址形式，而且用 / 表示间隔而不能用 \\
+        # Attention：Addresses must be written as absolute addresses and must usr '/' instead of '\\'
+        A = pd.read_csv("C:/Users/Ye/Desktop/SRTP_github/LicenseAnalysis/LicenseAnalysis/Conflict/newAMatrix.csv")
+
+        cpMatrix=np.copy(A.values)
+
+        counter=0
         cpResult={}
-        # n=len(A)
-        # for i in range(n):
-        #     isCp=True
-        #     for j in range(self.amount):
-        #         if(cpMatrix[self.lics[j]][i]==1 or cpMatrix[self.lics[j]][i]==-1):
-        #             continue
-        #         else:
-        #             isCp=False
-        #             break
-        #     if(isCp==True):
-        #         counter=counter+1
-        #         cpResult[counter]=i+1
-        #     isCp=True
+        n=len(A)
+        for i in range(n):
+            isCp=True
+            for j in range(self.amount):
+                if(cpMatrix[self.lics[j]][i]==1 or cpMatrix[self.lics[j]][i]==-1):
+                    continue
+                else:
+                    isCp=False
+                    break
+            if(isCp==True):
+                cpResult[counter] = i + 1
+                counter = counter + 1
+            isCp=True
 
         return cpResult
 
