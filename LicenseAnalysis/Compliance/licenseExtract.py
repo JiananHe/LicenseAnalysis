@@ -96,9 +96,14 @@ def generate_license_presentation(text):
     # print(type(all_licenses_key))
     # print(all_licenses_key)
     #
-    # csv_id = LM.getLicenseCsvId(21)
+    csv_id = LM.getLicenseCsvId(21)
+    main_id = LM.getLicenseIdByCsvId(csv_id)
+    print("csv_id")
+    print(csv_id)
+    print("main_id")
+    print(main_id)
     # print(type(csv_id))
-    # print(csv_id)
+
     result_process = find_all_possible_license(text)
 
     # print(result_process)
@@ -115,6 +120,7 @@ def generate_license_presentation(text):
     return license_id, tmp
 
 if __name__ == '__main__':
+    #licenseContentAnalyse
     print()
     text_origin_0 = "q"
     text_origin_1 = "under the terms of the under the Academic Free License test_chararcter version 3.0 as published by the Free Software Foundation."

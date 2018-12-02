@@ -5,7 +5,7 @@ import os, sys
 import json
 
 import LicenseModel.models as LM
-import Compliance.licenseContentAnalyse as LCA
+import Compliance.licenseExtract as LCA
 import Conflict.conflictDetect as LCD
 
 
@@ -114,7 +114,7 @@ def upload_folder(myfolder):
     print(license_id_dict)
     print(len(license_id_dict))
     conflict_ditector= LCD.Conflict(license_id_dict, len(license_id_dict))
-    conflict_result = conflict_ditector.detect()
+    conflict_result = conflict_ditector.get_compatible_licenses_processed()
     print("-------conflict_result-----------")
     print(conflict_result)
 
@@ -132,14 +132,17 @@ def upload_folder(myfolder):
 
     recommended_license_name_list = {}
     # recommended_license_text = "在您上传的项目中检测到了 "
-    recommended_license_text = "The following licenses are recommended to compatible with all licenses in your project:   "
-    for recommended_id in list(range(len(conflict_result))):
-        # existing_license_name_list[existing_id] = LM.getLicenseName(license_id_dict[existing_id])
-        name = LM.getLicenseName(conflict_result[recommended_id])
-        if recommended_id != 0:
-            recommended_license_text += ",    "
-        recommended_license_text += ( name + "  ")
-    recommended_license_text += ". "
+    if len(conflict_result) == 0:
+        recommended_license_text = "Sorry, there are no suitable licenses to be compatible with the licenses in the project. "
+    else:
+        recommended_license_text = "The following licenses are recommended to compatible with all licenses in your project:   "
+        for recommended_id in list(range(len(conflict_result))):
+            # existing_license_name_list[existing_id] = LM.getLicenseName(license_id_dict[existing_id])
+            name = LM.getLicenseName(conflict_result[recommended_id])
+            if recommended_id != 0:
+                recommended_license_text += ",    "
+            recommended_license_text += (name + "  ")
+        recommended_license_text += ". "
     # recommended_license_text += "等 " + str(len(license_id_dict)) + " 种许可证。"
 
 

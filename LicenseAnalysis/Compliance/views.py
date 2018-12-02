@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 import LicenseModel.models as LM
-import Compliance.licenseContentAnalyse as LCA
+import Compliance.licenseExtract as LCA
 import Conflict.conflictDetect as LCD
 
 
