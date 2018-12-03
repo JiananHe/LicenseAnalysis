@@ -19,10 +19,8 @@ class Conflict(object):
             self.lics[i]=licenses[i]
 
     def get_compatible_licenses(self):
-        # 取出兼容矩阵
-        # 注意：地址必须写为绝对地址形式，而且用 / 表示间隔而不能用 \\
-        # Attention：Addresses must be written as absolute addresses and must usr '/' instead of '\\'
-        A = pd.read_csv("E:/Users/Ye/Desktop/SRTP_github/LicenseAnalysis/LicenseAnalysis/Conflict/newAMatrix.csv")
+        # csv file is under the same path with this py
+        A = pd.read_csv("newAMatrix.csv")
 
         cpMatrix=np.copy(A.values)
 
