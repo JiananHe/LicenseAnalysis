@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 import LicenseModel.models as LM
-import Compliance.licenseContentAnalyse as LCA
+import Compliance.licenseExtract as LCA
 import Conflict.conflictDetect as LCD
 
 
@@ -118,13 +118,14 @@ def upload_folder(myfolder):
 
     tree_content += r'</ul>'
 
-    print("---------license_id_dict-------------")
-    print(license_id_dict)
-    print(len(license_id_dict))
-    conflict_ditector= LCD.Conflict(license_id_dict, len(license_id_dict))
-    conflict_result = conflict_ditector.detect()
-    print("-------conflict_result-----------")
-    print(conflict_result)
+    # print("---------license_id_dict-------------")
+    # print(license_id_dict)
+    # print(len(license_id_dict))
+    # conflict_ditector= LCD.Conflict(license_id_dict, len(license_id_dict))
+    # conflict_result = conflict_ditector.detect()
+    # print("-------conflict_result-----------")
+    # print(conflict_result)
+    conflict_result = ''
     return files_content, tree_content, license_names, conflict_result
 
 
@@ -148,7 +149,8 @@ def index(request):
                                                        'conflict_result': json.dumps(conflict_result)})
         elif myfile:
             text = upload_file(myfile)
-            print("============= user file text : " + text)
+            # print("============= user file text : " + text)
+            # print("========== the end of text : ")
             id, result = LCA.generate_license_presentation(text)
             license_name = LM.getLicenseName(id)
             return render(request, "compliance.html", {'result': json.dumps(result),
@@ -157,10 +159,10 @@ def index(request):
                                                        'hidden2': ""})
         elif text != "":
             text = str(text)
-            print("========== use input text : " + text)
+            # print("========== use input text : " + text)
+            # print("========== the end of text : ")
             id, result = LCA.generate_license_presentation(text)
-            print(result)
-
+            # print(result)
             license_name = LM.getLicenseName(id)
             return render(request, "compliance.html", {'result': json.dumps(result),
                                                        'license_name': json.dumps(license_name),

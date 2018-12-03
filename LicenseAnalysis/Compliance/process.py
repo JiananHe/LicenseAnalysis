@@ -100,13 +100,12 @@ def text_process(text, model, version):
         else:
             have_version = False
             while i < text_length:
-                if text[i] == 'v':
-                    text_version = get_version(text[i: i+10])
+                if text[i] == 'v' or text[i] == 'V':
+                    text_version = get_version(text[i: i+20])
                     if not text_version[0] == -1:
                         have_version = True
                         break
-                else:
-                    i = i + 1
+                i = i + 1
             if have_version == False or text_version[0] == -1:
                 return [False, -1, -1, -1, -1]
         model_version = get_version(version)

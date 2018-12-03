@@ -137,9 +137,26 @@ def getLicenseCsvId(id_num):
     """
     if id_num != -1:
         entry = license_description.objects.get(id=id_num)
-        return entry.csv_id
+        if entry.csv_id == None:
+            return -1
+        else:
+            return entry.csv_id
     else:
-        return ''
+        print("The id_num is out of the range of [0,35].")
+        return -1
+
+
+def getLicenseIdByCsvId(csv_id_input):
+    """
+    get the license id in csv file according to the standard id
+    :param id_num: the standard license id in description table
+    :return: the id in csv file
+    """
+    if csv_id_input != -1:
+        entry = license_description.objects.get(csv_id=csv_id_input)
+        return entry.id
+    else:
+        return -1
 
 
 def getLicenseAbbr(id_num):
