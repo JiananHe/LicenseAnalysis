@@ -20,7 +20,11 @@
               cursor: pointer;
           }
           black{
-              color: #000
+              color: #000;
+          }
+          strongBlue{
+            font-weight: bold;
+            color: #0000ff;
           }
     </style>
 </head>
@@ -66,7 +70,7 @@
                     <div class="row-md-6">
                         <div class="form-group">
                             <strong> license content:</strong>
-                            <textarea class="form-control" id="user_input" rows="5" cols="60"
+                                <textarea class="form-control" id="user_input" rows="5" cols="60"
                                       placeholder="Please input the license content..." name="user_input" onchange="textInput()"></textarea>
                         </div>
                     </div>
@@ -79,26 +83,38 @@
                 <div class="col-md-4">
                     <div class="tree well" id="tree_struct" name="tree_struct" style="padding-left: 7px" v-html="message">
                     </div>
-                    <button type="button" id="try_out2" class="btn btn-primary" onclick="conflictClick()">Conflict Analyse</button>
+                    <!--<button type="button" id="try_out2" class="btn btn-primary" onclick="conflictClick()">Conflict Analyse</button>-->
                 </div>
-                <div class="col-md-8">
-                    <div class="panel panel-info">
-                <div class="panel-heading">
-                    <h4 id="resultTitle">License Compliance Analysis Result: </h4>
-                </div>
-                <div class="panel-body">
-                    <pre>
-                        <p id="folder_content"></p>
-                    </pre>
 
-                </div>
-            </div>
+                <div class="col-md-8">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h4 id="compliance_resultTitle">License Compliance Analysis Result: </h4>
+                        </div>
+                        <div class="panel-body">
+                            <pre>
+                                <p id="compliance_content"></p>
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4 id="single_resultTitle">Single License Analysis Result: </h4>
+                        </div>
+                        <div class="panel-body">
+                            <pre>
+                                <p id="folder_content" class="text-primary">Please click one license name in the left panel.</p>
+                            </pre>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
             <div class="panel panel-info" {{ hidden2 }}>
                 <div class="panel-heading">
-                    <h4 id="compliance_title"></h4>
+                    <h4 id="single_license_title"></h4>
                 </div>
                 <div class="panel-body">
                     <pre>
@@ -113,17 +129,24 @@
 
 <script type="text/javascript">
 $(function() {
-        var content = {{ result|safe }}
+        var content = {{ result|safe }};
         $("#file_content").html(content);
 
-        var license_name = {{ license_name|safe }}
-        var title = "License Compliance Analysis Result:  <black>" + license_name + "</black>";
-        $("#compliance_title").html(title);
+        var license_name = {{ license_name|safe }};
+        var title = "Single License Analysis Result:  <black>" + license_name + "</black>";
+        $("#single_license_title").html(title);
+});
+</script>
+
+<script type="text/javascript">
+$(function() {
+        var compliance_content = {{ compliance_result|safe }};
+        $("#compliance_content").html(compliance_content);
 });
 </script>
 
 <script>
-function conflictClick(){
+function showCompliance(){
     $("#resultTitle").html("License Conflict Analysis Result: ");
 
     var content = {{ conflict_result|safe }}
@@ -140,6 +163,7 @@ function showContent(file_tag){
             content = {{ value|safe }}
         }
     {% endfor %}
+    $("#folder_content").removeClass("text-primary");
     $("#folder_content").html(content);
 
     var license_name = "";
@@ -148,8 +172,8 @@ function showContent(file_tag){
             license_name = {{ value|safe }}
     }
     {% endfor %}
-    var title = "License Compliance Analysis Result: <black>" + license_name + "</black>";
-    $("#resultTitle").html(title);
+    var title = "Single License Analysis Result: <black>" + license_name + "</black>";
+    $("#single_resultTitle").html(title);
 }
 </script>
 <script type="text/javascript">
@@ -205,6 +229,8 @@ function analysisClick(){
         　　}
         　　e.stopPropagation();
     　　});
+
+
 　　});
 </script>
 

@@ -1,51 +1,46 @@
 import pandas as pd
 import numpy as np
 import os
+
 os.environ['DJANGO_SETTINGS_MODULE'] = 'LicenseAnalysis.settings'
 import django
 django.setup()
+
+# Get the path of this file
+CURRENT_DIR = os.path.split(os.path.realpath(__file__))[0]
+
 import LicenseModel.models as LM
 
-class Conflict(object):
-    def __init__(self,licenses,amount):
-        self.amount=amount
 
+class Compliance(object):
+    def __init__(self, licenses):
+        print("The id of the license that needs to be analyzed for compatibility is \n " + str(licenses))
         self.lics = licenses
-        self.lics={}
-        # print("--------self.amount-----------")
-        # print(self.amount)
-        for i in range(self.amount):
-            # print(i)
-            self.lics[i]=licenses[i]
+        self.amount = len(licenses)
 
     def get_compatible_licenses(self):
         # csv file is under the same path with this py
-        A = pd.read_csv("newAMatrix.csv")
+        A = pd.read_csv(os.path.join(CURRENT_DIR, "newAMatrix.csv"))
 
-        cpMatrix=np.copy(A.values)
+        cpMatrix = np.copy(A.values)
 
-        counter=0
-        cpResult={}
-        n=len(A)
+        counter = 0
+        cpResult = {}
+        n = len(A)
         for i in range(n):
-            isCp=True
+            isCp = True
             for j in range(self.amount):
-                if cpMatrix[self.lics[j]-1][i] == 1 or cpMatrix[self.lics[j]-1][i] == -1:
+                if cpMatrix[self.lics[j] - 1][i] == 1 or cpMatrix[self.lics[j] - 1][i] == -1:
                     continue
                 else:
-                    isCp=False
+                    isCp = False
                     break
-            if(isCp==True):
+            if (isCp == True):
                 cpResult[counter] = i
                 counter = counter + 1
-            isCp=True
+            isCp = True
 
         return cpResult
-
-        # please give me a text a result
-        # print(str(self.lics))
-        # result = "this is a test conflict text, after improving conflict detection code, please replace result as your code return value"
-        # return result
 
     def convert_main_id_to_csv_id(self):
         count = 0
@@ -78,7 +73,7 @@ class Conflict(object):
 
     def get_compatible_licenses_processed(self):
         self.convert_main_id_to_csv_id()
-        print("the self.lics licenses is")
+        print("the licenses id in csv file (self.lics)  is")
         print(self.lics)
         compatible_licenses_csv_id = self.get_compatible_licenses()
         print("the compatible_licenses_csv_id licenses is")
@@ -87,36 +82,15 @@ class Conflict(object):
         return compatible_licenses
 
 
-if __name__=="__main__":
-    licenses={}
+if __name__ == "__main__":
+    licenses = {}
     # licenses[0]=9
     # licenses[1]=5
     # licenses[2]=14
-    licenses[0]=3
-    licenses[1]=19
-    print("the input licenses is")
-    print(licenses)
+    licenses[0] = 3
+    licenses[1] = 19
 
-    conflict = Conflict(licenses, len(licenses))
-    result=conflict.get_compatible_licenses_processed()
-    # result = "this is a test conflict text, after improving conflict detection code, please replace result as your code return value"
+    conflict = Compliance(licenses)
+    result = conflict.get_compatible_licenses_processed()
 
-
-    print("the result licenses is")
-    print(result)
-
-
-    # # this is a parameter example, please take a dict type parameter as your code input
-    # dict = {'test-folder/License': 14,
-    #  'test-folder/folder1-B/License': 1,
-    #  'test-folder/folder1-B/folder2-A/License': 24,
-    #  'test-folder/folder1-A/License': -1}
-    #
-
-    #
-    # # please give me a text a result
-    #result=conflict.detect()
-    # result = "this is a test conflict text, after improving conflict detection code, please replace result as your code return value"
-    #
-    # print(result)
 

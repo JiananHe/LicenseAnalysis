@@ -5,8 +5,7 @@ import os, sys
 import json
 
 import LicenseModel.models as LM
-import Compliance.licenseExtract as LCA
-import Conflict.conflictDetect as LCD
+import Compliance.licenseExtract as LE
 
 
 def upload_file(myfolder):
@@ -64,7 +63,7 @@ def upload_folder(myfolder):
         new_file.close()
 
         # call the compliance code
-        licenseId, tmp = LCA.generate_license_presentation(text)
+        licenseId, tmp = LE.generate_license_presentation(text)
         if not licenseId==-1:
             # remove the same license id
             is_license_exit = False
@@ -113,10 +112,10 @@ def upload_folder(myfolder):
     print("---------license_id_dict-------------")
     print(license_id_dict)
     print(len(license_id_dict))
-    conflict_ditector= LCD.Conflict(license_id_dict, len(license_id_dict))
-    conflict_result = conflict_ditector.get_compatible_licenses_processed()
-    print("-------conflict_result-----------")
-    print(conflict_result)
+    # conflict_ditector= LCD.Conflict(license_id_dict, len(license_id_dict))
+    # conflict_result = conflict_ditector.get_compatible_licenses_processed()
+    # print("-------conflict_result-----------")
+    # print(conflict_result)
 
     existing_license_name_list = {}
     # existing_license_text = "在您上传的项目中检测到了 "
@@ -158,7 +157,7 @@ def index(request):
 
         # if len(myfolder):
         #     return HttpResponse("Upload failed")
-        # result = LCA.contentAnalysis(text)
+        # result = LE.contentAnalysis(text)
 
         if myfolder:
             print("----------upload_folder")

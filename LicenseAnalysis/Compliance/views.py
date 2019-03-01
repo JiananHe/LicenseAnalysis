@@ -8,8 +8,8 @@ from django.http import HttpResponse
 from django.shortcuts import render
 
 import LicenseModel.models as LM
-import Compliance.licenseExtract as LCA
-import Conflict.conflictDetect as LCD
+import Compliance.licenseExtract as LE
+import Compliance.complianceAnalysis as LCA
 
 
 def upload_file(myfile):
@@ -52,8 +52,8 @@ def upload_folder(myfolder):
     # dict with all file name and its license name after analysis
     license_names = {}
 
-    # license id dict(file_path: license_id), archived for conflict detection
-    license_id_dict = {}
+    # license id list, archived for compliance detection
+    license_id_list = []
 
     dir_stack = []
     dir_name = ""
@@ -61,6 +61,7 @@ def upload_folder(myfolder):
     for file in myfolder:
         file_tag = "file" + str(file_id)
         file_path = file.name
+        file_id = file_id + 1
         print("each file name: " + file_path)
         path_list = file_path.split('/')
 
@@ -72,17 +73,15 @@ def upload_folder(myfolder):
             new_file.write(chunk)
         new_file.close()
 
-        # compliance analysis
         fob = open(new_file_path, 'r', encoding='UTF-8')
         text = str(fob.read())
         new_file.close()
 
-        # call the compliance code
-        licenseId, tmp = LCA.generate_license_presentation(text)
-        if not licenseId==-1:
-            license_id_dict[file_id] = licenseId
-            file_id = file_id + 1
+        # call the license extraction code
+        licenseId, tmp = LE.generate_license_presentation(text)
 
+        if not licenseId == -1:
+            license_id_list.append(licenseId)
 
         # get license abbreviation
         licenseAbbr = LM.getLicenseAbbr(licenseId)
@@ -108,7 +107,7 @@ def upload_folder(myfolder):
                 dir_layer = dir_layer + 1
                 dir_stack.append(pt)
                 tree_content += treeHtmlCode(pt, dir_layer)
-            else: # pop olds then push new
+            else:  # pop olds then push new
                 while dir_layer < len(dir_stack):
                     tree_content += treeHtmlCode('', -1)
                     dir_stack.pop()
@@ -118,15 +117,29 @@ def upload_folder(myfolder):
 
     tree_content += r'</ul>'
 
-    # print("---------license_id_dict-------------")
-    # print(license_id_dict)
-    # print(len(license_id_dict))
-    # conflict_ditector= LCD.Conflict(license_id_dict, len(license_id_dict))
-    # conflict_result = conflict_ditector.detect()
-    # print("-------conflict_result-----------")
-    # print(conflict_result)
-    conflict_result = ''
-    return files_content, tree_content, license_names, conflict_result
+    # call compliance  analysis code
+    print("---------license_id_dict-------------")
+    license_id_set = set(license_id_list)  # unduplicated
+    license_id_dict = {}
+    for i, license_id in enumerate(license_id_set):
+        license_id_dict[i] = license_id
+
+    print(license_id_dict)
+    compliance_detector = LCA.Compliance(license_id_dict)
+    compliance_license_id = compliance_detector.get_compatible_licenses_processed()
+    print(compliance_license_id)
+
+    compliance_result = 'The licenses for uploaded files includes: <br /><strongBlue>'
+    for id in license_id_set:
+        compliance_result += LM.getLicenseAbbr(id)
+        compliance_result += ', '
+    compliance_result += '</strongBlue><br />The licenses which are compatible with them includes:<br /><strongBlue>'
+    for id in compliance_license_id.values():
+        compliance_result += LM.getLicenseAbbr(id)
+        compliance_result += ', '
+    compliance_result += '</strongBlue>'
+
+    return files_content, tree_content, license_names, compliance_result
 
 
 # Create your views here.
@@ -140,18 +153,18 @@ def index(request):
         text = request.POST['user_input']
 
         if myfolder:
-            files_content, tree_content, license_names, conflict_result = upload_folder(myfolder)
+            files_content, tree_content, license_names, compliance_result = upload_folder(myfolder)
 
             return render(request, "compliance.html", {'hidden1': "", 'hidden2': "Hidden",
                                                        'files_content': files_content,
                                                        'license_names': license_names,
                                                        'tree_content': tree_content,
-                                                       'conflict_result': json.dumps(conflict_result)})
+                                                       'compliance_result': json.dumps(compliance_result)})
         elif myfile:
             text = upload_file(myfile)
             # print("============= user file text : " + text)
             # print("========== the end of text : ")
-            id, result = LCA.generate_license_presentation(text)
+            id, result = LE.generate_license_presentation(text)
             license_name = LM.getLicenseName(id)
             return render(request, "compliance.html", {'result': json.dumps(result),
                                                        'license_name': json.dumps(license_name),
@@ -161,7 +174,7 @@ def index(request):
             text = str(text)
             # print("========== use input text : " + text)
             # print("========== the end of text : ")
-            id, result = LCA.generate_license_presentation(text)
+            id, result = LE.generate_license_presentation(text)
             # print(result)
             license_name = LM.getLicenseName(id)
             return render(request, "compliance.html", {'result': json.dumps(result),
