@@ -2,9 +2,9 @@ import os
 import sys
 
 
-def upload_file(file_name):
+def upload_file(file_path):
     # UploadFolder = sys.path[0] + os.sep + "UploadFiles"
-    file_path = os.path.join(sys.path[0], file_name)
+    # file_path = os.path.join(sys.path[0], file_name)
     file_open = open(file_path, 'r', encoding='UTF-8')
     file_text = file_open.read()
 
@@ -22,6 +22,6 @@ class FilePreprocess():
 
 
 if __name__ == '__main__':
-    filePreprocess = FilePreprocess("licenseTestBSD3.txt")
+    filePreprocess = FilePreprocess(os.path.join(sys.path[0], "licenseTestBSD3.txt"))
     input_file = filePreprocess.execute()
     print(input_file)

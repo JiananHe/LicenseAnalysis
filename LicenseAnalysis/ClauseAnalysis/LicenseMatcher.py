@@ -4,12 +4,11 @@ from ClauseAnalysis.SentenceFilter import *
 from ClauseAnalysis.SentenceTokenizer import *
 import re
 
-
 license_rules_arrays = []
 
 
 def read_license_rules():
-    file_path = os.path.join(sys.path[0], "LicenseRules.txt")
+    file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "LicenseRules.txt")
     file_open = open(file_path, 'r', encoding='UTF-8')
     file_text = file_open.read()
     content_string = str(file_text)
@@ -18,7 +17,7 @@ def read_license_rules():
     license_rules = content_string.split("\n")
 
     # Traversing through critical_words in reversed order
-    for index in list(range(len(license_rules)-1, -1, -1)):
+    for index in list(range(len(license_rules) - 1, -1, -1)):
         # remove the blank line and comments(start with "#")
         if not license_rules[index] or license_rules[index][0] == '#':
             license_rules.remove(license_rules[index])
@@ -43,9 +42,9 @@ def contains_license_rule(rule_tokenizer_array, result_tokenizer_array):
                 # print("equal")
                 # print(rule_tokenizer_array[rule_index])
                 # print(result_tokenizer_array[result_index])
-                result_match = rule_index+1
+                result_match = rule_index + 1
                 break
-            elif result_index == result_length-1:
+            elif result_index == result_length - 1:
                 # print("return false")
                 return False
             else:
@@ -75,14 +74,13 @@ class LicenseMatcher:
         return license_match_analyse(self.tokenizer_result_array)
 
 
-if __name__ == '__main__':
-
-    # filePreprocess = FilePreprocess("licenseTestCase1")
-    # input_file = filePreprocess.execute()
-    #
-    # sentenceExtractor = SentenceExtractor(input_file)
-    # sentences_extracted = sentenceExtractor.execute()
-    filePreprocess = FilePreprocess("licenseTestBSD3.txt")
+def LicenseMatcherInterface(file_path):
+    """
+    the interface of license clause analysis, integrate all analysis processes.
+    :param file_path: the path of file needed to be analysed
+    :return: license_result: the license name of file
+    """
+    filePreprocess = FilePreprocess(file_path)
     input_file = filePreprocess.execute()
 
     sentenceExtractor = SentenceExtractor(input_file)
@@ -97,4 +95,15 @@ if __name__ == '__main__':
 
     licenseMatcher = LicenseMatcher(tokenizer_result_arrays)
     license_result = licenseMatcher.execute()
+
+    return license_result
+
+
+if __name__ == '__main__':
+    # filePreprocess = FilePreprocess("licenseTestCase1")
+    # input_file = filePreprocess.execute()
+    #
+    # sentenceExtractor = SentenceExtractor(input_file)
+    # sentences_extracted = sentenceExtractor.execute()
+    license_result = LicenseMatcherInterface(r'C:\Users\13249\Desktop\license.txt')
     print(license_result)

@@ -8,7 +8,7 @@ license_sentences_array = []
 
 
 def read_license_sentences():
-    file_path = os.path.join(sys.path[0], "licenseSentence.txt")
+    file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "licenseSentence.txt")
     file_open = open(file_path, 'r', encoding='UTF-8')
     file_text = file_open.read()
     content_string = str(file_text)

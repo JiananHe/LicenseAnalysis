@@ -9,6 +9,7 @@ from django.shortcuts import render
 
 import LicenseModel.models as LM
 import Compliance.licenseExtract as LE
+import ClauseAnalysis.LicenseMatcher  as LCM
 import Compliance.complianceAnalysis as LCA
 
 
@@ -24,7 +25,7 @@ def upload_file(myfile):
     fob = open(newPath, 'r', encoding='UTF-8')
     text = fob.read()
     newFile.close()
-    return str(text)
+    return str(text), newPath
 
 
 def treeHtmlCode(fileName, layer):
@@ -75,10 +76,12 @@ def upload_folder(myfolder):
 
         fob = open(new_file_path, 'r', encoding='UTF-8')
         text = str(fob.read())
-        new_file.close()
 
-        # call the license extraction code
+        # call the license extraction code 1.0
         licenseId, tmp = LE.generate_license_presentation(text)
+        # call the license extraction code 2.0
+        licenseName = LCM.LicenseMatcherInterface(new_file_path)
+        print("*******license analysis results with clause analysis*********" + str(licenseName))
 
         if not licenseId == -1:
             license_id_list.append(licenseId)
@@ -161,10 +164,16 @@ def index(request):
                                                        'tree_content': tree_content,
                                                        'compliance_result': json.dumps(compliance_result)})
         elif myfile:
-            text = upload_file(myfile)
+            text, new_file_path = upload_file(myfile)
             # print("============= user file text : " + text)
             # print("========== the end of text : ")
+
+            # call the license extraction code 1.0
             id, result = LE.generate_license_presentation(text)
+            # call the license extraction code 2.0
+            licenseName = LCM.LicenseMatcherInterface(new_file_path)
+            print("*******license analysis results with clause analysis*********" + str(licenseName))
+
             license_name = LM.getLicenseName(id)
             return render(request, "compliance.html", {'result': json.dumps(result),
                                                        'license_name': json.dumps(license_name),

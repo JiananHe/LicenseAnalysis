@@ -18,7 +18,7 @@ def sentence_filter(sentences):
 
 
 def read_critical_words():
-    file_path = os.path.join(sys.path[0], "criticalWords.txt")
+    file_path = os.path.join(os.path.dirname(os.path.realpath(__file__)), "criticalWords.txt")
     file_open = open(file_path, 'r', encoding='UTF-8')
     file_text = file_open.read()
     content_string = str(file_text)
