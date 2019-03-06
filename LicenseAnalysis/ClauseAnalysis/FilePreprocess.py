@@ -22,6 +22,6 @@ class FilePreprocess():
 
 
 if __name__ == '__main__':
-    filePreprocess = FilePreprocess("licenseTestCase1")
+    filePreprocess = FilePreprocess("licenseTestBSD3.txt")
     input_file = filePreprocess.execute()
     print(input_file)

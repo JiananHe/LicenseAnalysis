@@ -77,10 +77,16 @@ class LicenseMatcher:
 
 if __name__ == '__main__':
 
-    filePreprocess = FilePreprocess("licenseTestCase1")
+    # filePreprocess = FilePreprocess("licenseTestCase1")
+    # input_file = filePreprocess.execute()
+    #
+    # sentenceExtractor = SentenceExtractor(input_file)
+    # sentences_extracted = sentenceExtractor.execute()
+    filePreprocess = FilePreprocess("licenseTestBSD3.txt")
     input_file = filePreprocess.execute()
 
     sentenceExtractor = SentenceExtractor(input_file)
+    sentenceExtractor.set_analyse_type("text")
     sentences_extracted = sentenceExtractor.execute()
 
     sentenceFilter = SentenceFilter(sentences_extracted)

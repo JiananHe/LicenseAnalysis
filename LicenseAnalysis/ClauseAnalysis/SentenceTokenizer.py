@@ -28,10 +28,21 @@ def read_license_sentences():
 
 
 def contains_license_sentence(sentence):
+    tokenizer_array = []
     for licenseSentenceArray in license_sentences_array:
         search_result = re.search(r'' + licenseSentenceArray[3] + '', sentence, re.I)
         if search_result:
-            return licenseSentenceArray[0]
+            search_part = re.search(r'part\d', licenseSentenceArray[0], re.I)
+            # If tokenizer's name contains word "Part", like "ApacheLicWherePart1" or "ApacheLicWherePart2v2",
+            # we need to search next tokenizer in the remaining string in the word.
+            tokenizer_array.append(licenseSentenceArray[0])
+            if search_part:
+                sub_sentence = re.sub(r'' + licenseSentenceArray[3] + '', "", sentence)
+                sub_search_result = contains_license_sentence(sub_sentence)
+                if sub_search_result:
+                    tokenizer_array += sub_search_result
+
+            return tokenizer_array
     else:
         return None
 
@@ -40,7 +51,8 @@ def sentence_tokenizer_analyse(sentences):
     tokenizer_array = []
     for sentence in sentences:
         tokenizer = contains_license_sentence(sentence)
-        tokenizer_array.append(tokenizer)
+        if tokenizer:
+            tokenizer_array += tokenizer
     return tokenizer_array
 
 
@@ -57,10 +69,17 @@ class SentenceTokenizer:
 
 if __name__ == '__main__':
 
-    filePreprocess = FilePreprocess("licenseTestCase1")
+    # filePreprocess = FilePreprocess("licenseTestCase1")
+    # input_file = filePreprocess.execute()
+    #
+    # sentenceExtractor = SentenceExtractor(input_file)
+    # sentences_extracted = sentenceExtractor.execute()
+
+    filePreprocess = FilePreprocess("licenseTestBSD3.txt")
     input_file = filePreprocess.execute()
 
     sentenceExtractor = SentenceExtractor(input_file)
+    sentenceExtractor.set_analyse_type("text")
     sentences_extracted = sentenceExtractor.execute()
 
     sentenceFilter = SentenceFilter(sentences_extracted)
@@ -68,5 +87,7 @@ if __name__ == '__main__':
 
     sentenceTokenizer = SentenceTokenizer(good_sentences)
     tokenizer_result_array = sentenceTokenizer.execute()
+    for g in good_sentences:
+        print(g)
     for t in tokenizer_result_array:
         print(t)

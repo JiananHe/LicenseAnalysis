@@ -75,7 +75,7 @@ GPL2orOpenIB: GPLorOpenBSDTypeVer2,BSDpre,BSDcondSource,BSDcondBinary,X11asIs,X1
 CDDLv1orGPLv2:CDDLorGPLv2,CDDLorGPLv2compliance,CDDLorGPLv2where,ApachesPermLim,CDDLorGPLv2include
 
 # this one should go before the BSD ones
-intelBSDLicense:BSDpre,BSDcondSource,BSDcondBinary,BSDcondEndorseRULE,BSDasIs,BSDWarr,intelBSDexport1,intelBSDexport2,intelBSDexport3
+intelBSDLicense:BSDpre,BSDcondSource,BSDcondBinary,BSDcondEndorse,BSDasIs,BSDWarr,intelBSDexport1,intelBSDexport2,intelBSDexport3
 
 # this rule should be before BSDs
 spdxSleepyCat:SleepyCatNameExtrict,AllRights,BSDpre,BSDcondSourceExtrict,BSDcondBinaryExtrict,SleepyCatObtain,SleepyCatSourceIncluded,SleepyCatSourceComplete,SleepyCatDoesNotInclude,SleepyCatAsIs,BSDWarrExtrict,AllRights,BSDpre,BSDcondSourceExtrict,BSDcondBinaryExtrict,BSDcondEndorseExtrict,BSDasIsExtrict,BSDWarrExtrict,AllRights,BSDpre,BSDcondSourceExtrict,BSDcondBinaryExtrict,BSDcondEndorseExtrict,BSDasIsExtrict,BSDWarrExtrict
@@ -85,27 +85,28 @@ spdxBSD3:BSDpre,BSDcondSourceExtrict,BSDcondBinaryExtrict,BSDcondEndorseExtrict,
 spdxBSD2:BSDpre,BSDcondSourceExtrict,BSDcondBinaryExtrict,BSDasIsExtrict,BSDWarrExtrict
 
 # do not include copyright in the rule
-spdxMIT:MITpermissionExtrict,X11noticeExtrict,X11asIsExtrict,X11asLiableExtrict
+# spdxMIT:MITpermissionExtrict,X11noticeExtrict,X11asIsExtrict,X11asLiableExtrict
+MIT-X11:MITpermissionExtrict,X11noticeExtrict,X11asIsExtrict,X11asLiableExtrict
 
 #,SleepyCatObtain,SleepyCatObtain,SleepyCatSourceIncluded,SleepyCatSourceComplete
 #,BSDpre,BSDcondSourceExtrict,BSDcondBinaryExtrict,BSDcondEndorseExtrict,BSDasIsExtrict,BSDWarrExtrict,BSDpre,BSDcondSourceExtrict,BSDcondBinaryExtrict,SleepyCatAsIs,BSDWarrExtrict
 
-BSD4:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvPart1,BSDcondAdvPart2,BSDcondEndorseRULE,BSDasIs,BSDWarr
-BSD4:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvRULE,BSDcondEndorseRULE,BSDasIs,BSDWarr
-BSD3:BSDpre,BSDcondSource,BSDcondBinary,BSDcondEndorseRULE,BSDasIs,BSDWarr
+BSD4:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvPart1,BSDcondAdvPart2,BSDcondEndorse,BSDasIs,BSDWarr
+BSD4:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvRULE,BSDcondEndorse,BSDasIs,BSDWarr
+BSD3:BSDpre,BSDcondSource,BSDcondBinary,BSDcondEndorse,BSDasIs,BSDWarr
 BSD3:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvPart1,BSDcondAdvPart2,BSDasIs,BSDWarr
 BSD3:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvPart1,BSDcondAdvPart2,BSDcondAdvRULE,BSDasIs,BSDWarr
-BSD3NoWarranty:BSDpre,BSDcondSource,BSDcondBinary,BSDcondEndorseRULE,BSDasIs
+BSD3NoWarranty:BSDpre,BSDcondSource,BSDcondBinary,BSDcondEndorse,BSDasIs
 BSD4NoEndor:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvRULE,BSDasIs,BSDWarr
 
 BSD2:BSDpre,BSDcondSource,BSDcondBinary,BSDasIs,BSDWarr
 #BSD2EndorseInsteadOfBinary:BSDpre,BSDcondEndorse,BSDasIs,BSDWarr
-BSD2EndorseInsteadOfBinary:BSDpre,BSDcondSource,BSDcondEndorseRULE,BSDasIs,BSDWarr
+BSD2EndorseInsteadOfBinary:BSDpre,BSDcondSource,BSDcondEndorse,BSDasIs,BSDWarr
 BSD2AdvInsteadOfBinary:BSDpre,BSDcondSource,BSDcondAdvRULE,BSDasIs,BSDWarr
 BSD1:BSDpre,BSDcondBinary,BSDasIs,BSDWarr
 
 BSDOnlyAdv:BSDpre,BSDcondAdvRULE,BSDasIs,BSDWarr
-BSDOnlyEndorseNoWarranty:BSDpreLike,BSDcondEndorseRULE,BSDasIs
+BSDOnlyEndorseNoWarranty:BSDpreLike,BSDcondEndorse,BSDasIs
 
 BSD2var1:BSDpre,BSDCondSourceVariant,BSDcondBinary,BSDasIs,BSDWarr
 BSD2var2:BSDpre,BSDCondSourceVariant2,BSDcondBinary,BSDasIs,BSDWarr
@@ -117,7 +118,8 @@ BSD2SoftAndDoc:BSDpreSoftAndDoc,BSDcondSourceOrDoc,BSDcondBinary,BSDasIsSoftAndD
 BSDCairoStyleWarr:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvPart2,OpenSSLwritCond,OpenSSLName,BSDasIs,BSDWarr
 BSDdovecotStyle:BSDpre,BSDcondSource,BSDcondBinary,OpenSSLendorse,DovecotwriteCod,OpenSSLAckPart1,BSDcondAdvPart2,MITstyleCairoWarranty
 
-ZLIB:BSDpre,BSDcondSource,originNotMisrepresented,BSDZlibAck,BSDZlibAltered,BSDcondEndorseRULE,BSDasIs,BSDWarr
+ZLIB:BSDpre,BSDcondSource,originNotMisrepresented,BSDZlibAck,BSDZlibAltered,BSDcondEndorse,BSDasIs,BSDWarr
+ZLIB:BSDZlibAck,BSDZlibAltered
 ZLIBref:ZLibRef
 
 openSSL:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdv,OpenSSLendorse,OpenSSLwritCond,OpenSSLName,OpenSSLAck,BSDasIs,BSDWarr
@@ -194,7 +196,7 @@ MIToldMichiganVersion:MITpermNoSell,WarrantySupplied
 
 X11:X11per,X11notice,X11asIs,X11asLiable,X11adv
 X11mit:MITpermWithoutEndor,X11notice,X11asIs,X11asLiable,X11adv
-NCSA:X11per,BSDcondSource,BSDcondBinary,BSDcondEndorse,X11asIs,X11asLiable
+NCSA:X11per,BSDcondSource,BSDcondBinary,BSDcondEndorse,X11asIsExtrict,X11asLiable
 X11Festival:X11FestivalPerm,X11FestivalNotice,X11FestivalNoEndorse,MITstyleCairoWarranty
 MITmodern:MITmodermPerm,MITmodernLiable,MITmodermWarr,MitmodernAsIs
 MITX11BSDvar:MITpermAndOr,BSDasIs,BSDWarr
