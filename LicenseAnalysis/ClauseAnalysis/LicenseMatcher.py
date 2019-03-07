@@ -105,5 +105,9 @@ if __name__ == '__main__':
     #
     # sentenceExtractor = SentenceExtractor(input_file)
     # sentences_extracted = sentenceExtractor.execute()
+
+    # file_path = os.path.join(sys.path[0], "licenseTestBSD3.txt")
+    # license_result = LicenseMatcherInterface(file_path)
+
     license_result = LicenseMatcherInterface(r'C:\Users\13249\Desktop\license.txt')
     print(license_result)
