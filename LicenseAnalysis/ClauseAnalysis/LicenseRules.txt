@@ -86,20 +86,20 @@ spdxBSD2:BSDpre,BSDcondSourceExtrict,BSDcondBinaryExtrict,BSDasIsExtrict,BSDWarr
 
 # do not include copyright in the rule
 # spdxMIT:MITpermissionExtrict,X11noticeExtrict,X11asIsExtrict,X11asLiableExtrict
-MIT-X11:MITpermissionExtrict,X11noticeExtrict,X11asIsExtrict,X11asLiableExtrict
+MIT:MITpermissionExtrict,X11noticeExtrict,X11asIsExtrict,X11asLiableExtrict
 
 #,SleepyCatObtain,SleepyCatObtain,SleepyCatSourceIncluded,SleepyCatSourceComplete
 #,BSDpre,BSDcondSourceExtrict,BSDcondBinaryExtrict,BSDcondEndorseExtrict,BSDasIsExtrict,BSDWarrExtrict,BSDpre,BSDcondSourceExtrict,BSDcondBinaryExtrict,SleepyCatAsIs,BSDWarrExtrict
 
 BSD4:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvPart1,BSDcondAdvPart2,BSDcondEndorse,BSDasIs,BSDWarr
 BSD4:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvRULE,BSDcondEndorse,BSDasIs,BSDWarr
-BSD3:BSDpre,BSDcondSource,BSDcondBinary,BSDcondEndorse,BSDasIs,BSDWarr
-BSD3:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvPart1,BSDcondAdvPart2,BSDasIs,BSDWarr
-BSD3:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvPart1,BSDcondAdvPart2,BSDcondAdvRULE,BSDasIs,BSDWarr
+BSD-3-Clause:BSDpre,BSDcondSource,BSDcondBinary,BSDcondEndorse,BSDasIs,BSDWarr
+BSD-3-Clause:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvPart1,BSDcondAdvPart2,BSDasIs,BSDWarr
+BSD-3-Clause:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvPart1,BSDcondAdvPart2,BSDcondAdvRULE,BSDasIs,BSDWarr
 BSD3NoWarranty:BSDpre,BSDcondSource,BSDcondBinary,BSDcondEndorse,BSDasIs
 BSD4NoEndor:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvRULE,BSDasIs,BSDWarr
 
-BSD2:BSDpre,BSDcondSource,BSDcondBinary,BSDasIs,BSDWarr
+BSD-2-Clause-FreeBSD:BSDpre,BSDcondSource,BSDcondBinary,BSDasIs,BSDWarr
 #BSD2EndorseInsteadOfBinary:BSDpre,BSDcondEndorse,BSDasIs,BSDWarr
 BSD2EndorseInsteadOfBinary:BSDpre,BSDcondSource,BSDcondEndorse,BSDasIs,BSDWarr
 BSD2AdvInsteadOfBinary:BSDpre,BSDcondSource,BSDcondAdvRULE,BSDasIs,BSDWarr
@@ -118,8 +118,8 @@ BSD2SoftAndDoc:BSDpreSoftAndDoc,BSDcondSourceOrDoc,BSDcondBinary,BSDasIsSoftAndD
 BSDCairoStyleWarr:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvPart2,OpenSSLwritCond,OpenSSLName,BSDasIs,BSDWarr
 BSDdovecotStyle:BSDpre,BSDcondSource,BSDcondBinary,OpenSSLendorse,DovecotwriteCod,OpenSSLAckPart1,BSDcondAdvPart2,MITstyleCairoWarranty
 
-ZLIB:BSDpre,BSDcondSource,originNotMisrepresented,BSDZlibAck,BSDZlibAltered,BSDcondEndorse,BSDasIs,BSDWarr
-ZLIB:BSDZlibAck,BSDZlibAltered
+Zlib:BSDpre,BSDcondSource,originNotMisrepresented,BSDZlibAck,BSDZlibAltered,BSDcondEndorse,BSDasIs,BSDWarr
+Zlib:BSDZlibAck,BSDZlibAltered
 ZLIBref:ZLibRef
 
 openSSL:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdv,OpenSSLendorse,OpenSSLwritCond,OpenSSLName,OpenSSLAck,BSDasIs,BSDWarr
@@ -133,7 +133,7 @@ Apache-1.1:BSDpre,BSDcondSource,BSDcondBinary,BSDcondAdvPart2,OpenSSLendorse,Ope
 Apache-1.1:BSDpre,BSDcondSourceExtrict,BSDcondBinary,BSDcondAdvPart2,OpenSSLendorse,OpenSSLwritCond,OpenSSLName,BSDasIs,BSDWarr
 
 # this is dangerous. The v2 applies to apache (ninka-ism)
-Apache-2orLGPLgeneric:apacheAndLGPLgenVer2.0
+Apache-2.0orLGPLgeneric:apacheAndLGPLgenVer2.0
 
 SleepyCat:BSDpre,BSDcondSource,BSDcondBinary,SleepyCatObtain,SleepyCatSourceIncluded,SleepyCatSourceComplete,SleepyCatDoesNotInclude,SleepyCatAsIs,BSDWarr
 
@@ -221,8 +221,8 @@ EPLv1:EPLv1
 CDDLic:CDDLic
 CDDLicV1:CDDLicV1Only
 
-Apache-2:Apache-2,ApacheLicWherePart1,ApacheLicWherePart2v2,ApachesAsIs,ApachesPermLim
-Apache-2:Apache-2,ApacheLicWherePart1,ApacheLicWherePart2v2
+Apache-2.0:Apache-2,ApacheLicWherePart1,ApacheLicWherePart2v2,ApachesAsIs,ApachesPermLim
+Apache-2.0:Apache-2,ApacheLicWherePart1,ApacheLicWherePart2v2
 
 # publid comain
 publicDomain:publicDomain
@@ -325,8 +325,8 @@ zendv2:zendv2
 # kerberos
 kerberos:exportLicRequired,exportNoLia,exportMITper,exportMITmodify,MITnorep,MITasis
 
-# postgresql
-postgresql:psql,psqlLiab,psqlWarr,psqlWarr2
+# PostgreSQL
+PostgreSQL:psql,psqlLiab,psqlWarr,psqlWarr2
 postgresqlRef:postgresqlRef
 # gplv2+ with kde option
 GPLVer2or3KDE+:GPLGenKDEor3\+Ver2,FSFwarranty,GPLseeDetailsVer0,GPLcopyVer0,GNUurl

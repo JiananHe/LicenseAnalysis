@@ -146,14 +146,6 @@ $(function() {
 </script>
 
 <script>
-function showCompliance(){
-    $("#resultTitle").html("License Conflict Analysis Result: ");
-
-    var content = {{ conflict_result|safe }}
-    $("#folder_content").html(content);
-}
-</script>
-<script>
 function showContent(file_tag){
     file_id = String(file_tag);
 
@@ -172,7 +164,7 @@ function showContent(file_tag){
             license_name = {{ value|safe }}
     }
     {% endfor %}
-    var title = "Single License Analysis Result: <black>" + license_name + "</black>";
+    var title = "Single License Analysis Result: " + license_name;
     $("#single_resultTitle").html(title);
 }
 </script>

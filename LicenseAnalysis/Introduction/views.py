@@ -10,6 +10,8 @@ def index(request):
     search_text = ''
     if request.POST:  # receive search text from search box
         search_text = request.POST['search-text']
+    if search_text == '':
+        search_text = request.GET['search-text']
 
     search_result = LM.searchLicense(search_text)
 

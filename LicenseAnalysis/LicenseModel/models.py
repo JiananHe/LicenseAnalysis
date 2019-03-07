@@ -166,6 +166,16 @@ def getLicenseAbbr(id_num):
     else:
         return 'no license'
 
+def getLicenseAllAbbr():
+    """
+    Return all licenses abbr
+    """
+    entries = license_description.objects.values("abbreviation")
+    return_list = []
+    for entry in entries:
+        return_list.append(entry["abbreviation"])
+        
+    return return_list
 
 def getLicenseName(id_num):
     if id_num != -1:
@@ -173,3 +183,13 @@ def getLicenseName(id_num):
         return entry.name
     else:
         return 'no license info'
+
+
+def getLicenseId(abbr):
+    all_abbrs = getLicenseAllAbbr()
+    if not abbr in all_abbrs:
+        return -1
+    else:
+        entry = license_description.objects.get(abbreviation=abbr)
+        return entry.id
+        

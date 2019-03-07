@@ -79,9 +79,11 @@ def upload_folder(myfolder):
 
         # call the license extraction code 1.0
         licenseId, tmp = LE.generate_license_presentation(text)
-        # call the license extraction code 2.0
-        licenseName = LCM.LicenseMatcherInterface(new_file_path)
-        print("*******license analysis results with clause analysis*********" + str(licenseName))
+        # call the license extraction code 2.0 if the old algorithm get -1
+        if licenseId == -1:
+            license_abbr = LCM.LicenseMatcherInterface(new_file_path)
+            print("*******license analysis results with clause analysis*********" + str(license_abbr))
+            licenseId = LM.getLicenseId(license_abbr)
 
         if not licenseId == -1:
             license_id_list.append(licenseId)
@@ -92,6 +94,8 @@ def upload_folder(myfolder):
         files_content[str(file_tag)] = json.dumps(tmp)
 
         license_name = LM.getLicenseName(licenseId)
+        license_name = '<a href="/license/introduction?search-text=' + \
+                       licenseAbbr + '"><black>' + license_name + '</black></a>'
         license_names[str(file_tag)] = json.dumps(license_name)
 
         # record file directory structure
@@ -134,11 +138,15 @@ def upload_folder(myfolder):
 
     compliance_result = 'The licenses for uploaded files includes: <br /><strongBlue>'
     for id in license_id_set:
-        compliance_result += LM.getLicenseAbbr(id)
+        abbr = LM.getLicenseAbbr(id)
+        compliance_result += '<a href="/license/introduction?search-text=' + abbr + '">' + abbr + '</a>'
         compliance_result += ', '
+
     compliance_result += '</strongBlue><br />The licenses which are compatible with them includes:<br /><strongBlue>'
+
     for id in compliance_license_id.values():
-        compliance_result += LM.getLicenseAbbr(id)
+        abbr = LM.getLicenseAbbr(id)
+        compliance_result += '<a href="/license/introduction?search-text=' + abbr + '">' + abbr + '</a>'
         compliance_result += ', '
     compliance_result += '</strongBlue>'
 
@@ -170,11 +178,16 @@ def index(request):
 
             # call the license extraction code 1.0
             id, result = LE.generate_license_presentation(text)
-            # call the license extraction code 2.0
-            licenseName = LCM.LicenseMatcherInterface(new_file_path)
-            print("*******license analysis results with clause analysis*********" + str(licenseName))
+            # call the license extraction code 2.0 if the old algorithm get -1
+            if id == -1:
+                license_abbr = LCM.LicenseMatcherInterface(new_file_path)
+                print("*******license analysis results with clause analysis*********" + str(license_abbr))
+                id = LM.getLicenseId(license_abbr)
 
             license_name = LM.getLicenseName(id)
+            license_abbr = LM.getLicenseAbbr(id)
+            license_name = '<a href="/license/introduction?search-text=' + \
+            license_abbr + '"><black>' + license_name + '</black></a>'
             return render(request, "compliance.html", {'result': json.dumps(result),
                                                        'license_name': json.dumps(license_name),
                                                        'hidden1': "Hidden",
