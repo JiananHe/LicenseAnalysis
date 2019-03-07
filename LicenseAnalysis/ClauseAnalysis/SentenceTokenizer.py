@@ -75,7 +75,8 @@ if __name__ == '__main__':
     # sentenceExtractor = SentenceExtractor(input_file)
     # sentences_extracted = sentenceExtractor.execute()
 
-    filePreprocess = FilePreprocess("licenseTestBSD3.txt")
+    file_path = os.path.join(sys.path[0], "licenseTestBSD3.txt")
+    filePreprocess = FilePreprocess(file_path)
     input_file = filePreprocess.execute()
 
     sentenceExtractor = SentenceExtractor(input_file)

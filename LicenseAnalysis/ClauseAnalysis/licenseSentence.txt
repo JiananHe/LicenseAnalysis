@@ -489,7 +489,7 @@ X11perLike:52:0:Permission is hereby granted to use, copy, modify, sell, and oth
 X11subjectVariant:52:1:Subject to the following obligations and disclaimer of warranty, use and redistribution of this software, in source or object code forms, with or without modifications are expressly permitted by ([^;]+); provided, however, that:
 ZLibRef:42:0:^For conditions of distribution and use, see copyright notice in zlib\.h$:
 ZLibRef:52:0:^See zlib\.h for conditions of distribution and use$:
-publicDomain:01:0:^The original authors have disclaimed all copyright interest in this code and thus put it in the public domain$:
+publicDomain:01:0:^The original authors have disclaimed all copyright interest in this code and thus put it in the public domain
 publicDomain:02:0:^The original author has disclaimed all copyright interest in this code and thus put it in the public domain$:
 publicDomain:03:0:^Public Domain$:
 publicDomain:04:1:This ([^ ]+) is in the public domain:
