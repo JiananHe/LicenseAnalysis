@@ -11,8 +11,11 @@ def index(request):
     if request.POST:  # receive search text from search box
         search_text = request.POST['search-text']
     if search_text == '':
-        search_text = request.GET['search-text']
-
+        try:
+            search_text = request.GET['search-text']
+        except KeyError:
+            print("show all license")
+            
     search_result = LM.searchLicense(search_text)
 
     # return as dict to facilitate parsing in html to generate dynamic page
