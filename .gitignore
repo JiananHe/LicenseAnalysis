@@ -4,3 +4,4 @@ __pycache__
 /LicenseAnalysis/UploadFiles/*
 !/LicenseAnalysis/UploadFiles/testcase.txt
 !/LicenseAnalysis/UploadFiles/test-folder/
+!/LicenseAnalysis/UploadFiles/testLicenseCase/

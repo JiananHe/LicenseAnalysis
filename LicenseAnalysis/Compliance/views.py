@@ -9,7 +9,7 @@ from django.shortcuts import render
 
 import LicenseModel.models as LM
 import Compliance.licenseExtract as LE
-import ClauseAnalysis.LicenseMatcher  as LCM
+import ClauseAnalysis.LicenseMatcher as LCM
 import Compliance.complianceAnalysis as LCA
 
 

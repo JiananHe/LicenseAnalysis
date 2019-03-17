@@ -1,13 +1,35 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+{% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Conflict</title>
     <link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href=" {% static "jquerytree/css/bootstrap.min.css"%}" rel="stylesheet"/>
+    <link href=" {% static "jquerytree/css/style.css"%}" rel="stylesheet"/>
+    <script src="https://cdn.staticfile.org/vue/2.4.2/vue.min.js"></script>
     <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+          mark {
+              background-color: #ffff00;
+          }
+          a{
+              cursor: pointer;
+          }
+          black{
+              color: #000;
+          }
+          strongBlue{
+            font-weight: bold;
+            color: #0000ff;
+          }
+    </style>
+
 </head>
 <body>
 
@@ -22,41 +44,159 @@
         </div>
     </div>
 </nav>
-<div class="container">
-    <div class="page-header">
-        <div class="container">
-            <h1>Conflict</h1>
-        </div>
+
+<div style="margin: 40px;">
+    <div class="page-header" style="margin-top: 70px;">
+        <h2 class="text-primary"><strong>Licenses Conflict</strong></h2>
     </div>
 
     <div class="panel panel-default">
         <div class="panel-body">
             <form action="/license/conflict" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <div class="form-group">
-                    <label>Folder:</label>
-                    <input type="file" multiple="" webkitdirectory="" id="user_folder" name="user_folder" class="btn btn-default">
+                <div style="" class="col">
+                    <div class="row-md-6 row">
+                        <div class="col-md-6">
+                            <div class="form-group" style="padding-left: 5px;">
+                                <strong> Folder:</strong>
+                                <input type="file" multiple="" webkitdirectory="" id="user_folder" name="user_folder"
+                                       onchange="folderClick()" class="btn btn-default" style="height: 38px">
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <button type="submit" id="try_out" class="btn btn-primary">Analyse</button>
+
+                <button type="submit" id="try_out" class="btn btn-primary" onclick="analysisClick()">Conflict Analyse</button>
             </form>
-            <br>
-            <div class="panel panel-info" {{ hidden }}>
-                <div class="panel-heading">
-                    <h4>License Conflict Analysis Result: </h4>
+
+            <div class="row-md-6 row" {{ hidden1 }}>
+                <div class="col-md-4">
+                    <div class="tree well" id="tree_struct" name="tree_struct" style="padding-left: 7px" v-html="message">
+                    </div>
+                    <!--<button type="button" id="try_out2" class="btn btn-primary" onclick="conflictClick()">Conflict Analyse</button>-->
                 </div>
-                <div class="panel-body">
-                    <h5><h2>Licenses in the project</h2> {{ existing_license_text }} </h5>
-                    <br>
-                    <h5><h2>Recommended Licenses</h2> {{ recommended_license_text }}</h5>
-{#                    <pre>#}
-{#                        <p id="content"></p>#}
-{#                    </pre>#}
+
+                <div class="col-md-8">
+                    <div class="panel panel-success">
+                        <div class="panel-heading">
+                            <h4 id="conflict_resultTitle">License Conflict Analysis Result: </h4>
+                        </div>
+                        <div class="panel-body">
+                            <pre>
+                                <p id="conflict_content"></p>
+                            </pre>
+                        </div>
+                    </div>
+
+                    <div class="panel panel-primary">
+                        <div class="panel-heading">
+                            <h4 id="single_resultTitle">Single License Analysis Result: </h4>
+                        </div>
+                        <div class="panel-body">
+                            <pre>
+                                <p id="folder_content" class="text-primary">Please click one license name in the left panel.</p>
+                            </pre>
+                        </div>
+                    </div>
 
                 </div>
             </div>
+
         </div>
     </div>
 </div>
 
 </body>
+
+<script type="text/javascript">
+$(function() {
+        var content = {{ result|safe }};
+        $("#file_content").html(content);
+
+        var license_name = {{ license_name|safe }};
+        var title = "Single License Analysis Result:  <black>" + license_name + "</black>";
+        $("#single_license_title").html(title);
+});
+</script>
+
+<script type="text/javascript">
+$(function() {
+        var conflict_content = {{ conflict_result|safe }};
+        $("#conflict_content").html(conflict_content);
+});
+</script>
+
+<script>
+function showContent(file_tag){
+    file_id = String(file_tag);
+
+    var content = "";
+    {% for key, value in files_content.items %}
+        if("{{ key }}" == file_tag){
+            content = {{ value|safe }}
+        }
+    {% endfor %}
+    $("#folder_content").removeClass("text-primary");
+    $("#folder_content").html(content);
+
+    var license_name = "";
+    {% for key, value in license_names.items %}
+        if("{{ key }}" == file_tag){
+            license_name = {{ value|safe }}
+    }
+    {% endfor %}
+    var title = "Single License Analysis Result: " + license_name;
+    $("#single_resultTitle").html(title);
+}
+</script>
+<script type="text/javascript">
+function HTMLDecode(text) {
+    var temp = document.createElement("div");
+    temp.innerHTML = text;
+    var output = temp.innerText || temp.textContent;
+    temp = null;
+    return output;
+}
+$(function() {
+    var content = '{{ tree_content }}'
+    content = HTMLDecode(content);
+    new Vue({
+        el: '#tree_struct',
+        data: {
+            message: content
+        }
+    })
+});
+</script>
+
+<script type="text/javascript">
+function folderClick(){
+    document.getElementById("user_file").disabled = true;
+    document.getElementById("user_input").readOnly = true;
+}
+function analysisClick(){
+    document.getElementById("user_input").readOnly = true;
+    document.getElementById("user_file").disabled = false;
+    document.getElementById("user_folder").disabled = false;
+}
+</script>
+<script type="text/javascript">
+　　$(function(){
+    　　$('.tree li:has(ul)').addClass('parent_li').find(' > span').attr('title', 'Collapse this branch');
+    　　$('.tree li.parent_li > span').on('click', function (e) {
+       　　 var children = $(this).parent('li.parent_li').find(' > ul > li');
+        　　if (children.is(":visible")) {
+            　　children.hide('fast');
+            　　$(this).attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+        　　} else {
+            　　children.show('fast');
+            　　$(this).attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+        　　}
+        　　e.stopPropagation();
+    　　});
+
+
+　　});
+</script>
+
 </html>

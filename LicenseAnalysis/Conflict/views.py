@@ -6,11 +6,15 @@ import json
 
 import LicenseModel.models as LM
 import Compliance.licenseExtract as LE
+import ClauseAnalysis.LicenseMatcher as LCM
+import Compliance.complianceAnalysis as LCA
+
 
 
 def upload_file(myfolder):
     for file in myfolder:
         print("each file name: " + file.name)
+
 
 def treeHtmlCode(fileName, layer):
     code = r''
@@ -37,8 +41,9 @@ def upload_folder(myfolder):
     # dict with all file name and its license name after analysis
     license_names = {}
 
-    # license id dict(file_path: license_id), archived for conflict detection
-    license_id_dict = {}
+    # license id list, archived for compliance detection
+    license_id_list = []
+    license_abbr_list = []
 
     dir_stack = []
     dir_name = ""
@@ -46,6 +51,7 @@ def upload_folder(myfolder):
     for file in myfolder:
         file_tag = "file" + str(file_id)
         file_path = file.name
+        file_id = file_id + 1
         print("each file name: " + file_path)
         path_list = file_path.split('/')
 
@@ -57,30 +63,30 @@ def upload_folder(myfolder):
             new_file.write(chunk)
         new_file.close()
 
-        # compliance analysis
         fob = open(new_file_path, 'r', encoding='UTF-8')
         text = str(fob.read())
-        new_file.close()
 
-        # call the compliance code
+        # call the license extraction code 1.0
         licenseId, tmp = LE.generate_license_presentation(text)
-        if not licenseId==-1:
-            # remove the same license id
-            is_license_exit = False
-            for j in list(range(file_id)):
-                if license_id_dict[j] == licenseId:
-                    is_license_exit = True
-                    break
-            if is_license_exit == False:
-                license_id_dict[file_id] = licenseId
-                file_id = file_id + 1
+        # call the license extraction code 2.0 if the old algorithm get -1
+        if licenseId == -1:
+            license_abbr = LCM.LicenseMatcherInterface(new_file_path)
+            print("*******license analysis results with clause analysis*********" + str(license_abbr))
+            licenseId = LM.getLicenseId(license_abbr)
+
+        if not licenseId == -1:
+            license_id_list.append(licenseId)
 
         # get license abbreviation
         licenseAbbr = LM.getLicenseAbbr(licenseId)
+        if licenseAbbr != 'no license':
+            license_abbr_list.append(licenseAbbr)
 
         files_content[str(file_tag)] = json.dumps(tmp)
 
         license_name = LM.getLicenseName(licenseId)
+        license_name = '<a href="/license/introduction?search-text=' + \
+                       licenseAbbr + '"><black>' + license_name + '</black></a>'
         license_names[str(file_tag)] = json.dumps(license_name)
 
         # record file directory structure
@@ -99,7 +105,7 @@ def upload_folder(myfolder):
                 dir_layer = dir_layer + 1
                 dir_stack.append(pt)
                 tree_content += treeHtmlCode(pt, dir_layer)
-            else: # pop olds then push new
+            else:  # pop olds then push new
                 while dir_layer < len(dir_stack):
                     tree_content += treeHtmlCode('', -1)
                     dir_stack.pop()
@@ -109,72 +115,53 @@ def upload_folder(myfolder):
 
     tree_content += r'</ul>'
 
-    print("---------license_id_dict-------------")
-    print(license_id_dict)
-    print(len(license_id_dict))
-    # conflict_ditector= LCD.Conflict(license_id_dict, len(license_id_dict))
-    # conflict_result = conflict_ditector.get_compatible_licenses_processed()
-    # print("-------conflict_result-----------")
-    # print(conflict_result)
+    # call conflict  analysis code
+    conflict_list = [['Y', 'Y', 'N', 'Y', 'Y', 'Y', 'Y'],
+                     ['Y', 'Y', 'Y', 'N', 'Y', 'Y', 'Y'],
+                     ['N', 'Y', 'Y', 'Y', 'Y', 'Y', 'N'],
+                     ['Y', 'N', 'Y', 'Y', 'Y', 'Y', 'Y'],
+                     ['Y', 'Y', 'Y', 'Y', 'Y', 'N', 'Y'],
+                     ['Y', 'Y', 'Y', 'Y', 'N', 'Y', 'Y'],
+                     ['Y', 'Y', 'N', 'Y', 'Y', 'Y', 'Y']]
 
-    existing_license_name_list = {}
-    # existing_license_text = "在您上传的项目中检测到了 "
-    existing_license_text = "The system detected " + str(len(license_id_dict)) + " license(s) in your project:  "
-    for existing_id in list(range(len(license_id_dict))):
-        # existing_license_name_list[existing_id] = LM.getLicenseName(license_id_dict[existing_id])
-        name = LM.getLicenseName(license_id_dict[existing_id])
-        if existing_id != 0:
-            existing_license_text += ",    "
-        existing_license_text += ( name + "  ")
-    existing_license_text += ". "
-    # existing_license_text += "等 " + str(len(license_id_dict)) + " 种许可证。"
+    conflict_result = r'<table class="table">'
+    conflict_result += r'<tbody>'
+    conflict_result += r'<tr>'
+    conflict_result += r'<td> </td>'
+    for abbr in license_abbr_list:
+        conflict_result += r'<td>' + r'<a href="/license/introduction?search-text=' + abbr + r'">' + abbr + r'</a></td>'
+    conflict_result += r'</tr>'
 
-    recommended_license_name_list = {}
-    # recommended_license_text = "在您上传的项目中检测到了 "
-    if len(conflict_result) == 0:
-        recommended_license_text = "Sorry, there are no suitable licenses to be compatible with the licenses in the project. "
-    else:
-        recommended_license_text = "The following licenses are recommended to compatible with all licenses in your project:   "
-        for recommended_id in list(range(len(conflict_result))):
-            # existing_license_name_list[existing_id] = LM.getLicenseName(license_id_dict[existing_id])
-            name = LM.getLicenseName(conflict_result[recommended_id])
-            if recommended_id != 0:
-                recommended_license_text += ",    "
-            recommended_license_text += (name + "  ")
-        recommended_license_text += ". "
-    # recommended_license_text += "等 " + str(len(license_id_dict)) + " 种许可证。"
+    for i, abbr in enumerate(license_abbr_list):
+        conflict_result += r'<tr>'
+        conflict_result += r'<td>' + r'<a href="/license/introduction?search-text=' + abbr + r'">' + abbr + r'</a></td>'
+        for ans in conflict_list[i]:
+            conflict_result += r'<td>' + ans + r'</td>'
+        conflict_result += r'</tr>'
 
+    conflict_result += r'</tbody>'
+    conflict_result += r'</table>'
 
-    return files_content, tree_content, existing_license_text, recommended_license_text # ,license_names
+    return files_content, tree_content, license_names, conflict_result
 
 
 # Create your views here.
 def index(request):
     if request.POST:
+        # user upload a folder
         myfolder = request.FILES.getlist("user_folder", None)
-        print("folder name: " + str(myfolder))
-        print("type is : " + str(type(myfolder)))
-
-        # if len(myfolder):
-        #     return HttpResponse("Upload failed")
-        # result = LE.contentAnalysis(text)
 
         if myfolder:
-            print("----------upload_folder")
-            files_content, tree_content, existing_license_text, recommended_license_text = upload_folder(myfolder)
+            files_content, tree_content, license_names, conflict_result = upload_folder(myfolder)
 
+            return render(request, "conflict.html", {'hidden1': "",
+                                                       'files_content': files_content,
+                                                       'license_names': license_names,
+                                                       'tree_content': tree_content,
+                                                       'conflict_result': json.dumps(conflict_result)})
 
-
-            return render(request, "conflict.html", {'hidden': "",
-                                                     'files_content': files_content,
-                                                     'existing_license_text': existing_license_text,
-                                                     'recommended_license_text': recommended_license_text,
-                                                     'tree_content': tree_content})
         else:
-            return render(request, "conflict.html", {'hidden': "Hidden"})
+            return render(request, "conflict.html", {'hidden1': "Hidden", 'hidden2': "Hidden"})
 
-        # return render(request, "conflict.html", {'result': str(myfolder),
-        #                                            'hidden': ""})
     else:
-        # ctx['hidden'] = "hidden"
-        return render(request, "conflict.html", {'hidden': "Hidden"})
+        return render(request, "conflict.html", {'hidden1': "Hidden", 'hidden2': "Hidden"})
